@@ -102,8 +102,12 @@
           alert('Сохранение отменено или ошибка: ' + err);
         }
       } else {
-        // fallback: открываем диалог сохранения через ссылку
+        // Fallback: открываем blob URL в новой вкладке для сохранения через меню браузера
         const blob = new Blob([full], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
