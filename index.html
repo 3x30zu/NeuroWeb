@@ -31,16 +31,19 @@
     <div class="controls">
       <input type="file" id="templateLoader" accept=".html">
       <button id="exportBtn">Скачать HTML</button>
+      <button id="sendBtn">Отправить HTML</button>
     </div>
   </header>
   <div id="gjs"></div>
 
   <script>
-    let editor;
+    // Инициализация Telegram WebApp (если доступно)
+    const tg = window.Telegram?.WebApp;
+    if (tg) tg.expand();
 
+    let editor;
     document.getElementById('templateLoader').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       const text = await file.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, 'text/html');
@@ -48,10 +51,8 @@
       doc.querySelectorAll('style').forEach(s => inlineCss += s.innerHTML);
       const cssLinks = Array.from(doc.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
 
-      if (editor) {
-        editor.destroy();
-        document.getElementById('gjs').innerHTML = '';
-      }
+      if (editor) { editor.destroy(); document.getElementById('gjs').innerHTML = ''; }
+
       const customComponent = ed => {
         const dm = ed.DomComponents;
         const bm = ed.BlockManager;
@@ -60,11 +61,7 @@
           btnType.model.prototype.defaults.draggable = '*';
           btnType.model.prototype.defaults.droppable = '*';
         }
-        bm.add('new-button', {
-          label: 'Новая кнопка',
-          category: 'Элементы',
-          content: `<button class="btn">Новая кнопка</button>`,
-        });
+        bm.add('new-button', { label: 'Новая кнопка', category: 'Элементы', content: '<button class="btn">Новая кнопка</button>' });
       };
 
       editor = grapesjs.init({
@@ -74,46 +71,38 @@
         storageManager: false,
         plugins: ['gjs-preset-webpage', customComponent],
         pluginsOpts: { 'gjs-preset-webpage': {} },
-        canvas: {
-          styles: cssLinks.concat([`body{max-width:1200px;margin:0 auto;}`]),
-          scripts: []
-        },
+        canvas: { styles: cssLinks.concat([ 'body{max-width:1200px;margin:0 auto;}' ]), scripts: [] },
         components: doc.body.innerHTML,
         style: inlineCss
       });
     });
 
-    document.getElementById('exportBtn').addEventListener('click', async () => {
+    // Функция генерации полного HTML-файла
+    function generateFullHtml() {
+      const html = editor?.getHtml() || '';
+      const css = editor?.getCss() || '';
+      return `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>index.html</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+    }
+
+    // Скачивание файла
+    document.getElementById('exportBtn').addEventListener('click', () => {
       if (!editor) return alert('Сначала загрузите шаблон!');
-      const html = editor.getHtml();
-      const css = editor.getCss();
-      const full = `<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>index.html</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
-      // Используем File System Access API, если доступен
-      if (window.showSaveFilePicker) {
-        try {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: 'index.html',
-            types: [{ description: 'HTML Files', accept: { 'text/html': ['.html'] } }]
-          });
-          const writable = await handle.createWritable();
-          await writable.write(full);
-          await writable.close();
-        } catch (err) {
-          alert('Сохранение отменено или ошибка: ' + err);
-        }
+      const content = generateFullHtml();
+      const blob = new Blob([content], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    // Отправка через Telegram WebApp
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+      if (!editor) return alert('Сначала загрузите шаблон!');
+      const content = generateFullHtml();
+      if (tg) {
+        // Отправляем закодированный HTML в бот
+        tg.sendData(btoa(content));
       } else {
-        // Fallback: открываем blob URL в новой вкладке для сохранения через меню браузера
-        const blob = new Blob([full], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'index.html';
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        alert('Telegram WebApp не обнаружен.');
       }
     });
   </script>
