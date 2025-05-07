@@ -11,15 +11,12 @@
   <link href="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css" rel="stylesheet"/>
   <script src="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.js"></script>
   <style>
-    /* Общие стили */
     body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; font-family: sans-serif; }
     header { background: #333; color: #fff; padding: 10px; display: flex; align-items: center; justify-content: space-between; }
     header h1 { font-size: 1.2rem; margin: 0; }
     .controls { display: flex; gap: 10px; }
     .controls input, .controls button { background: #555; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
     #gjs { flex: 1; }
-
-    /* Простая мобильная адаптация */
     @media (max-width: 768px) {
       header { flex-direction: column; align-items: stretch; }
       header h1 { text-align: center; margin-bottom: 8px; }
@@ -32,7 +29,7 @@
   <header>
     <h1>NeuroWeb Редактор Шаблонов</h1>
     <div class="controls">
-      <input type="file" id="templateLoader" accept=".html" title="Загрузить index.html">
+      <input type="file" id="templateLoader" accept=".html">
       <button id="exportBtn">Скачать HTML</button>
     </div>
   </header>
@@ -40,6 +37,7 @@
 
   <script>
     let editor;
+
     document.getElementById('templateLoader').addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -54,7 +52,6 @@
         editor.destroy();
         document.getElementById('gjs').innerHTML = '';
       }
-      // Плагин для перетаскивания кнопок и блока "Новая кнопка"
       const customComponent = ed => {
         const dm = ed.DomComponents;
         const bm = ed.BlockManager;
@@ -86,23 +83,34 @@
       });
     });
 
-    document.getElementById('exportBtn').addEventListener('click', () => {
+    document.getElementById('exportBtn').addEventListener('click', async () => {
       if (!editor) return alert('Сначала загрузите шаблон!');
       const html = editor.getHtml();
       const css = editor.getCss();
-      const full = `<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Edited Template</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
-      const blob = new Blob([full], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'index.html';
-      // Safari на iOS не поддерживает download — открываем в новом окне
-      if ('download' in a) {
-        a.click();
+      const full = `<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>index.html</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+      // Используем File System Access API, если доступен
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: 'index.html',
+            types: [{ description: 'HTML Files', accept: { 'text/html': ['.html'] } }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(full);
+          await writable.close();
+        } catch (err) {
+          alert('Сохранение отменено или ошибка: ' + err);
+        }
       } else {
-        window.open(url, '_blank');
+        // fallback: открываем диалог сохранения через ссылку
+        const blob = new Blob([full], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
   </script>
 </body>
