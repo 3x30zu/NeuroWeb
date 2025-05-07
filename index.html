@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroWeb Шаблонный Редактор</title>
+  <!-- GrapesJS -->
+  <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/grapesjs"></script>
+  <!-- Webpage Preset -->
+  <link href="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; font-family: sans-serif; }
+    header { background: #333; color: #fff; padding: 10px; display: flex; align-items: center; }
+    header h1 { flex: 1; font-size: 1.2rem; margin: 0; }
+    header .controls { display: flex; gap: 10px; }
+    header button, header input[type=file] { background: #555; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+    #gjs { flex: 1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NeuroWeb Редактор Шаблонов</h1>
+    <div class="controls">
+      <input type="file" id="templateLoader" accept=".html">
+      <button id="exportBtn">Скачать HTML</button>
+    </div>
+  </header>
+  <div id="gjs"></div>
+
+  <script>
+    let editor;
+    document.getElementById('templateLoader').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const text = await file.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      let inlineCss = '';
+      doc.querySelectorAll('style').forEach(s => inlineCss += s.innerHTML);
+      const cssLinks = Array.from(doc.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
+
+      // Destroy previous editor
+      if (editor) {
+        editor.destroy();
+        document.getElementById('gjs').innerHTML = '';
+      }
+      // Override button component defaults
+      const customComponent = (editor) => {
+        const dm = editor.DomComponents;
+        const bm = editor.BlockManager;
+        const btnType = dm.getType('button');
+        if (btnType) {
+          const btnModel = btnType.model;
+          btnModel.prototype.defaults.draggable = '*';
+          btnModel.prototype.defaults.droppable = '*';
+        }
+        // Add new button block
+        bm.add('new-button', {
+          label: 'Новая кнопка',
+          category: 'Элементы',
+          attributes: { class: 'fa fa-hand-pointer' },
+          content: `<button class="btn">Новая кнопка</button>`,
+        });
+      };
+      // Init editor
+      editor = grapesjs.init({
+        container: '#gjs',
+        fromElement: false,
+        height: '100%',
+        storageManager: false,
+        plugins: ['gjs-preset-webpage', customComponent],
+        pluginsOpts: { 'gjs-preset-webpage': {} },
+        canvas: {
+          styles: cssLinks.concat([`body{max-width:1200px;margin:0 auto;}`]),
+          scripts: []
+        },
+        components: doc.body.innerHTML,
+        style: inlineCss
+      });
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      if (!editor) return alert('Сначала загрузите шаблон!');
+      const html = editor.getHtml();
+      const css = editor.getCss();
+      const full = `<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Edited Template</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+      const blob = new Blob([full], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'edited_template.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
