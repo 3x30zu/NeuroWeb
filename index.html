@@ -2,8 +2,10 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>NeuroWeb Шаблонный Редактор</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroWeb Modern Editor</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <!-- Telegram Web App SDK -->
   <script async src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- GrapesJS -->
@@ -13,100 +15,129 @@
   <link href="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css" rel="stylesheet"/>
   <script src="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.js"></script>
   <style>
-    body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; font-family: sans-serif; }
-    header { background: #333; color: #fff; padding: 10px; display: flex; align-items: center; justify-content: space-between; }
-    header h1 { font-size: 1.2rem; margin: 0; }
-    .controls { display: flex; gap: 10px; }
-    .controls input, .controls button { background: #555; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-    #gjs { flex: 1; }
-    @media (max-width: 768px) {
-      header { flex-direction: column; align-items: stretch; }
-      header h1 { text-align: center; margin-bottom: 8px; }
-      .controls { justify-content: center; flex-wrap: wrap; }
-      .controls input, .controls button { flex: 1 1 45%; margin: 4px; font-size: 0.9rem; }
+    :root {
+      --primary: #00d8ff;
+      --secondary: #0081a7;
+      --bg: #0f0f0f;
+      --surface: rgba(26,26,26,0.8);
+      --text: #ffffff;
+      --accent: #ffde59;
+      --youtube: #FF0000;
+      --transition: 0.4s;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html { width:100%; height:100%; font-family: 'Orbitron', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; position: relative; }
+    /* Animated Gradient Background */
+    @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes blob { 0%,100% { border-radius: 42% 58% 31% 69% / 51% 32% 68% 49%; } 50% { border-radius: 61% 39% 65% 35% / 42% 55% 45% 58%; } }
+    /* Particle dots */
+    @keyframes particle { from { transform: translateY(0) scale(0.5); opacity:1; } to { transform: translateY(-800px) scale(1.5); opacity:0; } }
+    /* Fullscreen Splash */
+    #splash {
+      position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: linear-gradient(270deg, #001f3f, #00d8ff, #001f3f);
+      background-size: 600% 600%; animation: gradientBG 15s ease infinite;
+      overflow: hidden; z-index: 100;
+    }
+    /* Blobs */
+    #splash::after {
+      content: '';
+      position: absolute; width: 600px; height: 600px; background: var(--accent); opacity:0.2;
+      top: 20%; left: 10%; animation: blob 20s infinite ease-in-out;
+    }
+    #splash::before {
+      content: '';
+      position: absolute; width: 500px; height: 500px; background: var(--primary); opacity:0.15;
+      bottom: 15%; right: 5%; animation: blob 18s infinite ease-in-out reverse;
+    }
+    /* Particles */
+    .particle { position:absolute; bottom:0; background: var(--accent); opacity:0; border-radius:50%; animation: particle linear infinite; }
+    /* Generate particles */
+    /* We'll inject via JS */
+    #splash h1 {
+      position: relative; font-size: 3rem; margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px rgba(0,216,255,0.7), 0 0 20px rgba(0,216,255,0.5);
+      z-index: 1;
+    }
+    #splash .controls,
+    header .controls { display:flex; gap:1rem; flex-wrap: wrap; justify-content: center; z-index: 1; }
+    .btn, .upload-btn, .support-btn, .youtube-btn {
+      background: var(--surface); color: var(--text); border: 2px solid var(--accent);
+      padding:1rem 1.5rem; border-radius:8px; cursor:pointer; font-size:1rem; text-transform: uppercase;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .upload-btn::before, .btn::before, .support-btn::before, .youtube-btn::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: rgba(255,255,255,0.1);
+      transform: skewX(-20deg); transition: left 0.5s ease;
+    }
+    .btn:hover::before, .upload-btn:hover::before, .support-btn:hover::before, .youtube-btn:hover::before { left: 200%; }
+    .upload-btn:hover, .btn:hover, .support-btn:hover, .youtube-btn:hover {
+      background: var(--accent); color: var(--bg); transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(255,222,89,0.6);
+    }
+    input[type=file] { display:none; }
+    /* Main App */
+    #app { display: none; flex-direction: column; height:100%; position: relative; }
+    header { height: 60px; background: var(--surface); display:flex; align-items:center; padding:0 1rem; gap:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.7); }
+    header h2 { flex:1; font-size:1.2rem; text-shadow: 0 0 5px rgba(0,216,255,0.7); }
+    #editor-container { flex:1; position: relative;
+      background: radial-gradient(circle at center, rgba(0,216,255,0.1), transparent 70%);
+      overflow: hidden;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>NeuroWeb Редактор Шаблонов</h1>
-    <div class="controls">
-      <input type="file" id="templateLoader" accept=".html">
-      <button id="exportBtn">Скачать HTML</button>
-      <button id="sendBtn">Отправить HTML</button>
-    </div>
-  </header>
-  <div id="gjs"></div>
+  <!-- Splash Screen -->
+  <div id="splash"></div>
+  <h1 id="splash-title">NeuroWeb Editor</h1>
+  <div id="splash-controls" class="controls">
+    <label class="upload-btn" for="templateLoader">Загрузить шаблон</label>
+    <button id="supportBtn" class="support-btn">Поддержать нас</button>
+    <button id="youtubeBtn" class="youtube-btn">YouTube</button>
+  </div>
+  <input id="templateLoader" type="file" accept=".html">
+
+  <!-- Editor Application -->
+  <div id="app">
+    <header>
+      <h2>NeuroWeb Modern Editor</h2>
+      <div class="controls">
+        <button id="downloadBtn" class="btn">Скачать</button>
+        <button id="supportMainBtn" class="support-btn">Поддержать нас</button>
+        <button id="youtubeMainBtn" class="youtube-btn">YouTube</button>
+      </div>
+    </header>
+    <div id="editor-container"></div>
+  </div>
 
   <script>
-    // Инициализация Telegram WebApp (если доступно)
-    const tg = window.Telegram?.WebApp;
-    if (tg) tg.expand();
+    // Generate particles
+    for(let i=0;i<40;i++){const p=document.createElement('div');p.classList.add('particle');const size= Math.random()*8+2; p.style.width=size+'px';p.style.height=size+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(Math.random()*5+5)+'s';p.style.animationDelay=(Math.random()*5)+'s';document.getElementById('splash').appendChild(p);}    
+    // Splash elements append
+    const splash = document.getElementById('splash');
+    const title = document.getElementById('splash-title');
+    const controls = document.getElementById('splash-controls');
+    splash.appendChild(title);
+    splash.appendChild(controls);
 
-    let editor;
-    document.getElementById('templateLoader').addEventListener('change', async (e) => {
+    // Telegram WebApp expand
+    const tg = window.Telegram?.WebApp; if (tg) tg.expand();
+    document.getElementById('supportBtn').onclick = document.getElementById('supportMainBtn').onclick = () => window.open('https://t.me/tribute/app?startapp=dpSw','_blank');
+    document.getElementById('youtubeBtn').onclick = document.getElementById('youtubeMainBtn').onclick = () => window.open('https://www.youtube.com/@neurowebbb','_blank');
+
+    const loader = document.getElementById('templateLoader');
+    loader.addEventListener('change', async e => {
       const file = e.target.files[0]; if (!file) return;
-      const text = await file.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, 'text/html');
-      let inlineCss = '';
-      doc.querySelectorAll('style').forEach(s => inlineCss += s.innerHTML);
-      const cssLinks = Array.from(doc.querySelectorAll('link[rel="stylesheet"]')).map(l => l.href);
-
-      if (editor) { editor.destroy(); document.getElementById('gjs').innerHTML = ''; }
-
-      const customComponent = ed => {
-        const dm = ed.DomComponents;
-        const bm = ed.BlockManager;
-        const btnType = dm.getType('button');
-        if (btnType) {
-          btnType.model.prototype.defaults.draggable = '*';
-          btnType.model.prototype.defaults.droppable = '*';
-        }
-        bm.add('new-button', { label: 'Новая кнопка', category: 'Элементы', content: '<button class="btn">Новая кнопка</button>' });
-      };
-
-      editor = grapesjs.init({
-        container: '#gjs',
-        fromElement: false,
-        height: '100%',
-        storageManager: false,
-        plugins: ['gjs-preset-webpage', customComponent],
-        pluginsOpts: { 'gjs-preset-webpage': {} },
-        canvas: { styles: cssLinks.concat([ 'body{max-width:1200px;margin:0 auto;}' ]), scripts: [] },
-        components: doc.body.innerHTML,
-        style: inlineCss
-      });
+      document.getElementById('splash').style.display='none';
+      title.style.display='none'; controls.style.display='none';
+      document.getElementById('app').style.display='flex';
+      const text = await file.text(); const doc=new DOMParser().parseFromString(text,'text/html');
+      let inlineCss=''; doc.querySelectorAll('style').forEach(s=>inlineCss+=s.innerHTML);
+      const cssLinks=[...doc.querySelectorAll('link[rel="stylesheet"]')].map(l=>l.href);
+      grapesjs.init({container:'#editor-container',fromElement:false,height:'100%',storageManager:false,plugins:['gjs-preset-webpage'],pluginsOpts:{'gjs-preset-webpage':{}},canvas:{styles:cssLinks.concat(['body{max-width:1200px;margin:0 auto;}']),scripts:[]},components:doc.body.innerHTML,style:inlineCss});
     });
-
-    // Функция генерации полного HTML-файла
-    function generateFullHtml() {
-      const html = editor?.getHtml() || '';
-      const css = editor?.getCss() || '';
-      return `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>index.html</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
-    }
-
-    // Скачивание файла
-    document.getElementById('exportBtn').addEventListener('click', () => {
-      if (!editor) return alert('Сначала загрузите шаблон!');
-      const content = generateFullHtml();
-      const blob = new Blob([content], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'index.html'; a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    });
-
-    // Отправка через Telegram WebApp
-    document.getElementById('sendBtn').addEventListener('click', async () => {
-      if (!editor) return alert('Сначала загрузите шаблон!');
-      const content = generateFullHtml();
-      if (tg) {
-        // Отправляем закодированный HTML в бот
-        tg.sendData(btoa(content));
-      } else {
-        alert('Telegram WebApp не обнаружен.');
-      }
-    });
+    document.getElementById('downloadBtn').addEventListener('click',()=>{const ed=grapesjs.editors[0];if(!ed)return alert('Загрузите шаблон!');const html=ed.getHtml(),css=ed.getCss();const full=`<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>index.html</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;const blob=new Blob([full],{type:'text/html'}),url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='index.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   </script>
 </body>
 </html>
