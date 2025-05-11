@@ -3,141 +3,1123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuroWeb Modern Editor</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Telegram Web App SDK -->
+  <title>NeuroWeb Template Creator v5</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
   <script async src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- GrapesJS -->
   <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet"/>
   <script src="https://unpkg.com/grapesjs"></script>
-  <!-- Webpage Preset -->
   <link href="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.css" rel="stylesheet"/>
   <script src="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.js"></script>
   <style>
-    :root {
-      --primary: #00d8ff;
-      --secondary: #0081a7;
-      --bg: #0f0f0f;
-      --surface: rgba(26,26,26,0.8);
-      --text: #ffffff;
-      --accent: #ffde59;
-      --youtube: #FF0000;
-      --transition: 0.4s;
+    :root{
+      --bg-dark: #06070f;
+      --bg-medium: #0e101f;
+      --surface: rgba(12, 15, 30, 0.9);
+      --text: #dde4ff;
+      --text-secondary: #a0b0d0;
+      --accent: #00eaff;
+      --accent-secondary: #aa00ff;
+      --neon-glow: rgba(0, 234, 255, 0.5);
+      --neon-glow-secondary: rgba(170, 0, 255, 0.5);
+      --handle-color: var(--accent-secondary);
+      --danger-color: #ff3b6f;
+      --success-color: #00ffaa;
+      --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      /* Updated default font stack */
+      --font-main: 'Exo 2', 'Orbitron', 'Lato', 'Montserrat', sans-serif;
+      --font-mono: 'Roboto Mono', monospace;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body, html { width:100%; height:100%; font-family: 'Orbitron', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; position: relative; }
-    /* Animated Gradient Background */
-    @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-    @keyframes blob { 0%,100% { border-radius: 42% 58% 31% 69% / 51% 32% 68% 49%; } 50% { border-radius: 61% 39% 65% 35% / 42% 55% 45% 58%; } }
-    /* Particle dots */
-    @keyframes particle { from { transform: translateY(0) scale(0.5); opacity:1; } to { transform: translateY(-800px) scale(1.5); opacity:0; } }
-    /* Fullscreen Splash */
-    #splash {
-      position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center;
-      background: linear-gradient(270deg, #001f3f, #00d8ff, #001f3f);
-      background-size: 600% 600%; animation: gradientBG 15s ease infinite;
-      overflow: hidden; z-index: 100;
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{ scroll-behavior: smooth; }
+    body,html{width:100%;height:100%;overflow:hidden;font-family:var(--font-main);background:var(--bg-dark);color:var(--text);}
+
+    body {
+      background: linear-gradient(60deg, var(--bg-dark) 0%, #0a0c1a 30%, #080a16 70%, var(--bg-dark) 100%);
+      animation: subtleBodyGradientShift 50s ease infinite;
     }
-    /* Blobs */
-    #splash::after {
-      content: '';
-      position: absolute; width: 600px; height: 600px; background: var(--accent); opacity:0.2;
-      top: 20%; left: 10%; animation: blob 20s infinite ease-in-out;
+    @keyframes subtleBodyGradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
-    #splash::before {
-      content: '';
-      position: absolute; width: 500px; height: 500px; background: var(--primary); opacity:0.15;
-      bottom: 15%; right: 5%; animation: blob 18s infinite ease-in-out reverse;
+
+    #particles-container {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0; overflow: hidden;
     }
-    /* Particles */
-    .particle { position:absolute; bottom:0; background: var(--accent); opacity:0; border-radius:50%; animation: particle linear infinite; }
-    /* Generate particles */
-    /* We'll inject via JS */
-    #splash h1 {
-      position: relative; font-size: 3rem; margin-bottom: 1.5rem;
-      text-shadow: 0 0 10px rgba(0,216,255,0.7), 0 0 20px rgba(0,216,255,0.5);
-      z-index: 1;
+    .particle {
+      position: absolute; background-color: var(--accent); border-radius: 50%;
+      opacity: 0; animation: float 25s infinite ease-in-out;
+      filter: blur(1px);
     }
-    #splash .controls,
-    header .controls { display:flex; gap:1rem; flex-wrap: wrap; justify-content: center; z-index: 1; }
-    .btn, .upload-btn, .support-btn, .youtube-btn {
-      background: var(--surface); color: var(--text); border: 2px solid var(--accent);
-      padding:1rem 1.5rem; border-radius:8px; cursor:pointer; font-size:1rem; text-transform: uppercase;
-      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-      position: relative; overflow: hidden;
+    .particle.p2 { background-color: var(--accent-secondary); animation-duration: 30s; filter: blur(1.5px); }
+    @keyframes float {
+      0%, 100% { transform: translateY(40px) translateX(20px) scale(0.6); opacity: 0; }
+      10% { opacity: var(--particle-opacity-start, 0.5); }
+      50% { transform: translateY(var(--float-y)) translateX(var(--float-x)) scale(var(--float-scale)); opacity: var(--particle-opacity-mid, 0.15); }
+      90% { opacity: var(--particle-opacity-end, 0.4); }
     }
-    .upload-btn::before, .btn::before, .support-btn::before, .youtube-btn::before {
-      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: rgba(255,255,255,0.1);
-      transform: skewX(-20deg); transition: left 0.5s ease;
+
+    #splash{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;z-index:1000; transition: opacity 0.7s ease-out;}
+    #splash-bg-grid {
+        position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1;
+        background-image:
+            linear-gradient(rgba(0, 234, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 234, 255, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px;
+        animation: moveSplashGrid 15s linear infinite;
     }
-    .btn:hover::before, .upload-btn:hover::before, .support-btn:hover::before, .youtube-btn:hover::before { left: 200%; }
-    .upload-btn:hover, .btn:hover, .support-btn:hover, .youtube-btn:hover {
-      background: var(--accent); color: var(--bg); transform: translateY(-3px);
-      box-shadow: 0 4px 15px rgba(255,222,89,0.6);
+    @keyframes moveSplashGrid {
+        0% { background-position: 0 0; }
+        100% { background-position: 60px 30px; }
     }
-    input[type=file] { display:none; }
-    /* Main App */
-    #app { display: none; flex-direction: column; height:100%; position: relative; }
-    header { height: 60px; background: var(--surface); display:flex; align-items:center; padding:0 1rem; gap:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.7); }
-    header h2 { flex:1; font-size:1.2rem; text-shadow: 0 0 5px rgba(0,216,255,0.7); }
-    #editor-container { flex:1; position: relative;
-      background: radial-gradient(circle at center, rgba(0,216,255,0.1), transparent 70%);
-      overflow: hidden;
+    .neon-title{font-size:clamp(2.8rem, 12vw, 4.5rem);color:var(--accent);text-shadow:0 0 6px var(--accent), 0 0 12px var(--accent), 0 0 25px var(--neon-glow), 0 0 40px var(--neon-glow), 0 0 60px var(--accent-secondary);animation:flicker 2.5s infinite alternate, pulseText 4s ease-in-out infinite; letter-spacing: 2px;}
+    @keyframes pulseText { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.02); opacity: 1;} }
+    #enterBtn { margin-top: 2.5rem; animation: pulseButton 2.2s infinite ease-in-out; font-size: 0.9rem; padding: 0.8rem 1.8rem;}
+
+    header{position:relative;z-index:100;height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:var(--surface);backdrop-filter:blur(18px);border-bottom:1px solid var(--accent);box-shadow: 0 3px 25px rgba(0,0,0,0.5), 0 0 12px var(--neon-glow) inset;}
+    header h2{font-size:1.6rem;color:var(--accent);text-shadow:0 0 4px var(--neon-glow); letter-spacing: 1.5px;}
+    .controls{display:flex;gap:1rem;}
+    .btn{position:relative;z-index:10;background:rgba(12, 15, 30, 0.6);color:var(--accent);border:1px solid var(--accent);padding:0.75rem 1.5rem;border-radius:5px;font-size:0.8rem;text-transform:uppercase;cursor:pointer;overflow:hidden;transition:all var(--transition);box-shadow:0 0 6px rgba(0,234,255,0.25), inset 0 0 10px rgba(0,0,0,0.4);margin:0.2rem; letter-spacing: 1.8px; font-weight: 500;}
+    .btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(100deg, transparent, rgba(0,234,255,0.7), transparent);transition:left 0.7s ease;z-index:0;} /* z-index was -1 */
+    .btn span { position: relative; z-index: 1; } /* Ensure text is above ::before */
+    .btn:hover{color:var(--bg-dark); background-color: var(--accent); box-shadow:0 0 14px var(--neon-glow), 0 0 22px var(--accent), inset 0 0 6px rgba(0,0,0,0.3); transform: translateY(-3px) scale(1.02);}
+    .btn:hover::before{left:100%;}
+    .btn.active { background-color: var(--accent); color: var(--bg-dark); box-shadow:0 0 14px var(--neon-glow), 0 0 22px var(--accent); border-color: var(--accent-secondary); transform: translateY(-1px) scale(1.01);}
+    .btn#deleteBtn { border-color: var(--danger-color); color: var(--danger-color); box-shadow:0 0 6px rgba(255,59,111,0.35), inset 0 0 10px rgba(0,0,0,0.4);}
+    .btn#deleteBtn:hover { background-color: var(--danger-color); color: #fff; box-shadow:0 0 14px var(--danger-color), 0 0 22px var(--danger-color);}
+
+    #app{display:none;flex-direction:column;height:100%;position:relative; z-index: 1;}
+    .view{flex:1;position:relative;display:none;overflow:hidden; padding: 0.75rem;}
+    .view.active{display:flex; flex-direction: column; animation: fadeInView 0.6s ease-out;}
+
+    #editor-view { padding: 0; }
+    #editor-toolbar{position:absolute;top:12px;right:1.5rem;display:flex;gap:0.75rem;z-index:10;}
+    #editor-container{border:1px solid var(--accent); margin-top: 50px; height: calc(100% - 110px) !important; box-shadow: 0 0 18px var(--neon-glow) inset, 0 0 10px rgba(0,0,0,0.3);}
+
+    #creator-view { flex-direction: row; gap: 0.75rem; }
+    #creator-sidebar{width:320px; height:100%; background:var(--surface);backdrop-filter:blur(12px);padding:1.25rem;overflow-y:auto;z-index: 5; border-right: 1px solid var(--accent-secondary); box-shadow: 6px 0 20px rgba(0,0,0,0.35); border-radius: 8px 0 0 8px;}
+    #creator-content{flex:1; height:100%; border:1px solid var(--accent);background:transparent; overflow:auto; user-select: none; position:relative; box-shadow: 0 0 18px var(--neon-glow) inset, 0 0 10px rgba(0,0,0,0.3); transition: background 0.5s ease; border-radius: 0 8px 8px 0;}
+
+    .editable-element{
+      cursor:grab; padding:0.5rem; border:1px dashed var(--accent);
+      position:absolute; background-color: rgba(0,234,255,0.04);
+      min-width: 35px; min-height: 20px;
+      box-shadow: 0 0 4px rgba(0,234,255,0.15);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border 0.15s ease;
+      border-radius: 3px; /* Default border radius */
     }
+    .editable-element:active { cursor: grabbing; transform: scale(0.98); }
+    .editable-element.selected{
+      border:1.5px solid var(--handle-color);
+      box-shadow: 0 0 10px var(--handle-color), 0 0 4px var(--handle-color) inset;
+      outline: 1.5px solid rgba(var(--handle-color), 0.5);
+    }
+    .resize-handle {
+      position: absolute; width: 11px; height: 11px;
+      background-color: var(--handle-color);
+      border: 1.5px solid rgba(0,0,0,0.6);
+      border-radius: 3px;
+      z-index: 100; box-shadow: 0 0 4px var(--handle-color);
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+    .resize-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+    .resize-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+    .resize-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+    .resize-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+    .resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+    .resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+    .resize-handle.w { left: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+    .resize-handle.e { right: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+
+    .resize-handle:hover { transform: scale(1.35); background-color: var(--accent); border-color: var(--bg-dark); }
+    .resize-handle.n:hover, .resize-handle.s:hover { transform: translateX(-50%) scale(1.35); }
+    .resize-handle.w:hover, .resize-handle.e:hover { transform: translateY(-50%) scale(1.35); }
+
+
+    .sidebar-section { margin-bottom: 1.8rem; padding: 1.25rem; border: 1px solid rgba(0,234,255,0.15); border-radius: 8px; background-color: rgba(0,0,0,0.15); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .sidebar-section h3 { color: var(--accent); margin-top:0; margin-bottom: 1.25rem; font-size: 1.1rem; text-shadow: 0 0 3px var(--neon-glow); border-bottom: 1px solid rgba(0,234,255,0.25); padding-bottom: 0.75rem; letter-spacing: 1px;}
+    .sidebar-section label { display: block; margin-bottom: 0.5rem; font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500;}
+    .sidebar-section input[type="text"],
+    .sidebar-section input[type="number"], /* Added number type */
+    .sidebar-section input[type="color"],
+    .sidebar-section select {
+        width: calc(100% - 16px); padding: 0.7rem; margin-bottom: 1rem;
+        background-color: rgba(0,0,0,0.5); border: 1px solid var(--accent-secondary);
+        color: var(--text); border-radius: 5px;
+        transition: box-shadow var(--transition), border-color var(--transition), background-color var(--transition);
+        font-family: var(--font-mono); font-size: 0.9rem;
+    }
+    .sidebar-section input[type="range"] { /* Opacity Slider */
+        width: calc(100% - 16px); margin-bottom: 1rem; -webkit-appearance: none; appearance: none; height: 8px; background: rgba(0,0,0,0.5); border-radius: 5px; border: 1px solid var(--accent-secondary); cursor: pointer;
+    }
+    .sidebar-section input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-dark); box-shadow: 0 0 5px var(--neon-glow); cursor: pointer; }
+    .sidebar-section input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-dark); box-shadow: 0 0 5px var(--neon-glow); cursor: pointer; }
+
+    .sidebar-section input[type="text"]::placeholder { color: #5c6880; }
+    .sidebar-section input:focus, .sidebar-section select:focus, .sidebar-section input[type="range"]:focus {
+        border-color: var(--accent); box-shadow: 0 0 12px var(--neon-glow); outline: none; background-color: rgba(0,10,20,0.6);
+    }
+    .sidebar-section input[type="color"] { height: 42px; padding: 0.25rem; cursor: pointer; }
+    .sidebar-section input[type="checkbox"] {
+        appearance: none; width: 17px; height: 17px; border: 2px solid var(--accent); border-radius: 4px;
+        display: inline-block; vertical-align: middle; position: relative; cursor: pointer; margin-right: 10px;
+        transition: background-color var(--transition), box-shadow var(--transition);
+    }
+    .sidebar-section input[type="checkbox"]:checked { background-color: var(--accent); box-shadow: 0 0 6px var(--neon-glow); }
+    .sidebar-section input[type="checkbox"]:checked::before {
+        content: ''; width: 7px; height: 3px; border-left: 2px solid var(--bg-dark); border-bottom: 2px solid var(--bg-dark);
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%) rotate(-45deg);
+    }
+     .sidebar-section .btn { width: 100%; margin-bottom: 0.6rem; padding: 0.85rem; font-size: 0.8rem; }
+
+    #bottom-toolbar{
+      position:absolute; bottom:0; left:320px;
+      right:0; padding:0.8rem; display:flex; justify-content: center; gap:1.25rem; z-index:10;
+      background: var(--surface); border-top: 1px solid var(--accent-secondary);
+      box-shadow: 0 -3px 15px rgba(0,0,0,0.4);
+    }
+
+    /* New Animated Backgrounds */
+    .pattern-digital-rain {
+        background-color: #03070f;
+        overflow: hidden; /* Important for canvas based effects if any */
+    }
+    .pattern-hexagonal-mesh {
+        --hex-color: rgba(0, 234, 255, 0.08);
+        --hex-size: 30px;
+        background-image:
+            linear-gradient(30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)),
+            linear-gradient(-30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)),
+            linear-gradient(90deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size));
+        background-size: calc(var(--hex-size) * 1.732) var(--hex-size); /* sqrt(3) * size, size */
+        animation: moveHexMesh 20s linear infinite;
+    }
+    @keyframes moveHexMesh {
+        0% { background-position: 0 0; }
+        100% { background-position: calc(var(--hex-size) * 1.732 * 2) calc(var(--hex-size) * 2); }
+    }
+     /* Added/Corrected CSS Animations for existing patterns */
+    .pattern-animated-grid {
+        background-image: linear-gradient(rgba(0,234,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,234,255,0.07) 1px, transparent 1px);
+        background-size: 25px 25px;
+        animation: moveGrid 8s linear infinite;
+    }
+    @keyframes moveGrid {
+        0% { background-position: 0 0; }
+        100% { background-position: 25px 25px; }
+    }
+    .pattern-animated-dots {
+        background-image: radial-gradient(rgba(0,234,255,0.15) 1px, transparent 1px);
+        background-size: 18px 18px;
+        animation: pulseDots 4s ease-in-out infinite alternate;
+    }
+    @keyframes pulseDots {
+        0% { background-size: 18px 18px; opacity: 0.6; }
+        100% { background-size: 22px 22px; opacity: 1; }
+    }
+    .pattern-animated-lines {
+        background: repeating-linear-gradient(
+            60deg,
+            rgba(0,234,255,0.03),
+            rgba(0,234,255,0.03) 8px,
+            rgba(0,234,255,0.06) 8px,
+            rgba(0,234,255,0.06) 16px
+        );
+        background-size: 150% 150%;
+        animation: moveLines 10s linear infinite;
+    }
+    @keyframes moveLines {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 100% 100%; }
+    }
+
+
+    .pattern-warp-speed {
+        background-color: #03050a;
+        /* JS will handle canvas for this one */
+    }
+
+    label[for="gradientPicker"], #gradientPicker { display: none; }
+
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-track { background: var(--bg-medium); border-radius: 10px; border: 1px solid rgba(0,0,0,0.2);}
+    ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 10px; border: 1px solid rgba(0,0,0,0.5);}
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); box-shadow: 0 0 5px var(--neon-glow);}
+
+    /* Canvas for Digital Rain / Warp Speed */
+    #dynamicBgCanvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events: none;}
+
   </style>
 </head>
 <body>
-  <!-- Splash Screen -->
-  <div id="splash"></div>
-  <h1 id="splash-title">NeuroWeb Editor</h1>
-  <div id="splash-controls" class="controls">
-    <label class="upload-btn" for="templateLoader">Загрузить шаблон</label>
-    <button id="supportBtn" class="support-btn">Поддержать нас</button>
-    <button id="youtubeBtn" class="youtube-btn">YouTube</button>
+  <div id="particles-container"></div>
+  <div id="splash">
+    <div id="splash-bg-grid"></div>
+    <h1 class="neon-title">NeuroWeb Creator</h1>
+    <button id="enterBtn" class="btn"><span>ВОЙТИ</span></button>
   </div>
-  <input id="templateLoader" type="file" accept=".html">
-
-  <!-- Editor Application -->
   <div id="app">
     <header>
-      <h2>NeuroWeb Modern Editor</h2>
+      <h2>NeuroWeb Template Creator</h2>
       <div class="controls">
-        <button id="downloadBtn" class="btn">Скачать</button>
-        <button id="supportMainBtn" class="support-btn">Поддержать нас</button>
-        <button id="youtubeMainBtn" class="youtube-btn">YouTube</button>
+        <button id="tabEditor" class="btn"><span>Редактор</span></button>
+        <button id="tabCreator" class="btn active"><span>Конструктор</span></button>
+        <button id="downloadSiteBtn" class="btn"><span>Экспорт</span></button>
       </div>
     </header>
-    <div id="editor-container"></div>
+    <div id="editor-view" class="view">
+      <div id="editor-toolbar">
+        <button id="loadTemplateBtn" class="btn"><span>Импорт</span></button>
+        <button id="downloadBtn" class="btn"><span>Скачать Шаблон</span></button>
+        <input type="file" id="templateLoader" accept=".html" style="display:none;" />
+      </div>
+      <div id="editor-container"></div>
+    </div>
+    <div id="creator-view" class="view active">
+      <div id="creator-sidebar">
+        <div class="sidebar-section">
+            <h3>Стиль Холста</h3>
+            <label for="solidColorPicker">Цвет заливки:</label>
+            <input type="color" id="solidColorPicker" value="#06070f" />
+
+            <label for="patternPicker">Анимированные текстуры:</label>
+            <select id="patternPicker">
+              <option value="none">Отключено</option>
+              <option value="pattern-animated-grid">Кибер-сетка</option>
+              <option value="pattern-animated-dots">Пульсар</option>
+              <option value="pattern-animated-lines">Энерго-линии</option>
+              <option value="pattern-hexagonal-mesh">Гексагональная Сеть</option>
+              <option value="pattern-digital-rain">Цифровой Дождь (Matrix)</option>
+              <option value="pattern-warp-speed">Варп-Скорость</option>
+            </select>
+        </div>
+        <div class="sidebar-section">
+            <h3>Градиентный Фон</h3>
+            <label for="gradientColor1">Цвет начала:</label>
+            <input type="color" id="gradientColor1" value="#aa00ff">
+            <label for="gradientColor2">Цвет конца:</label>
+            <input type="color" id="gradientColor2" value="#00eaff">
+            <label for="gradientDirection">Направление потока:</label>
+            <select id="gradientDirection">
+              <option value="to right">Вправо &#8594;</option>
+              <option value="to left">&#8592; Влево</option>
+              <option value="to bottom">Вниз &#8595;</option>
+              <option value="to top">&#8593; Вверх</option>
+              <option value="to bottom right">Вниз-вправо &#8600;</option>
+              <option value="to bottom left">Вниз-влево &#8601;</option>
+              <option value="to top right">Вверх-вправо &#8598;</option>
+              <option value="to top left">Вверх-влево &#8599;</option>
+              <option value="45deg">45°</option> <option value="90deg">90°</option> <option value="135deg">135°</option> <option value="225deg">225°</option>
+            </select>
+            <div>
+                <input type="checkbox" id="gradientAnimate">
+                <label for="gradientAnimate" style="display:inline; font-size:0.85rem; text-transform:none; color: var(--text);">Анимировать переход</label>
+            </div>
+            <button id="applyGradientBtn" class="btn" style="margin-top: 10px;"><span>Применить Градиент</span></button>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>Модули</h3>
+            <label for="newElementText">Содержимое модуля:</label>
+            <input type="text" id="newElementText" placeholder="Текст, заголовок..." />
+            <button id="addTextBtn" class="btn"><span>Текстовый Блок</span></button>
+            <button id="addButtonBtn" class="btn"><span>Интерактивная Кнопка</span></button>
+            <button id="addImageBtn" class="btn"><span>Графический Объект</span></button>
+            <button id="addDivBtn" class="btn"><span>Контейнер (Div)</span></button>
+        </div>
+         <div class="sidebar-section">
+            <h3>Параметры Модуля</h3>
+            <label for="elementOpacity">Прозрачность:</label>
+            <input type="range" id="elementOpacity" min="0" max="1" step="0.01" value="1">
+
+            <label for="elementFontFamily">Шрифт текста:</label>
+            <select id="elementFontFamily">
+                <option value="'Exo 2', sans-serif">Exo 2 (техно)</option>
+                <option value="'Orbitron', sans-serif">Orbitron (футуризм)</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono (код)</option>
+                <option value="'Lato', sans-serif">Lato (современный)</option>
+                <option value="'Montserrat', sans-serif">Montserrat (геометрический)</option>
+                <option value="'Playfair Display', serif">Playfair Display (элегантный)</option>
+                <option value="Arial, sans-serif">Arial (стандарт)</option>
+                <option value="Verdana, sans-serif">Verdana (стандарт)</option>
+                <option value="Georgia, serif">Georgia (с засечками)</option>
+                <option value="'Comic Sans MS', cursive">Comic Sans (креатив)</option>
+            </select>
+            <label for="elementFontSize">Размер текста (px, em, %):</label>
+            <input type="text" id="elementFontSize" placeholder="16px">
+
+            <label for="elementWidth">Ширина (px, %, vw):</label>
+            <input type="text" id="elementWidth" placeholder="auto">
+            <label for="elementHeight">Высота (px, %, vh):</label>
+            <input type="text" id="elementHeight" placeholder="auto">
+            <label for="elementBgColor">Цвет фона модуля:</label>
+            <input type="color" id="elementBgColor" value="#0e101f">
+            <label for="elementTextColor">Цвет текста модуля:</label>
+            <input type="color" id="elementTextColor" value="#dde4ff">
+
+            <label for="elementBorderRadius">Скругление углов (px, %):</label>
+            <input type="text" id="elementBorderRadius" placeholder="3px">
+            <label for="elementBorderWidth">Толщина рамки (px):</label>
+            <input type="text" id="elementBorderWidth" placeholder="1px">
+            <label for="elementBorderStyle">Стиль рамки:</label>
+            <select id="elementBorderStyle">
+                <option value="none">Нет</option><option value="solid">Сплошная</option><option value="dashed">Пунктир</option>
+                <option value="dotted">Точечная</option><option value="double">Двойная</option><option value="groove">Желоб</option>
+                <option value="ridge">Выступ</option><option value="inset">Вдавленная</option><option value="outset">Выпуклая</option>
+            </select>
+            <label for="elementBorderColor">Цвет рамки:</label>
+            <input type="color" id="elementBorderColor" value="#00eaff">
+
+            <label for="elementBoxShadow">Тень блока (CSS):</label>
+            <input type="text" id="elementBoxShadow" placeholder="2px 2px 5px #000">
+            <label for="elementTextShadow">Тень текста (CSS):</label>
+            <input type="text" id="elementTextShadow" placeholder="1px 1px 2px #000">
+        </div>
+      </div>
+      <div id="creator-content">
+         <canvas id="dynamicBgCanvas"></canvas> </div>
+      <div id="bottom-toolbar">
+        <button id="deleteBtn" class="btn"><span>Удалить выбранное</span></button>
+        <button id="creatorDownloadBtn" class="btn"><span>Сохранить Композицию</span></button>
+      </div>
+    </div>
   </div>
-
   <script>
-    // Generate particles
-    for(let i=0;i<40;i++){const p=document.createElement('div');p.classList.add('particle');const size= Math.random()*8+2; p.style.width=size+'px';p.style.height=size+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(Math.random()*5+5)+'s';p.style.animationDelay=(Math.random()*5)+'s';document.getElementById('splash').appendChild(p);}    
-    // Splash elements append
+    // DOM Elements
     const splash = document.getElementById('splash');
-    const title = document.getElementById('splash-title');
-    const controls = document.getElementById('splash-controls');
-    splash.appendChild(title);
-    splash.appendChild(controls);
+    const app = document.getElementById('app');
+    const enterBtn = document.getElementById('enterBtn');
+    const tabEditor = document.getElementById('tabEditor');
+    const tabCreator = document.getElementById('tabCreator');
+    const editorView = document.getElementById('editor-view');
+    const creatorView = document.getElementById('creator-view');
+    const loadTemplateBtn = document.getElementById('loadTemplateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadSiteBtn = document.getElementById('downloadSiteBtn');
+    const templateLoader = document.getElementById('templateLoader');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const creatorDownloadBtn = document.getElementById('creatorDownloadBtn');
+    const particlesContainer = document.getElementById('particles-container');
 
-    // Telegram WebApp expand
-    const tg = window.Telegram?.WebApp; if (tg) tg.expand();
-    document.getElementById('supportBtn').onclick = document.getElementById('supportMainBtn').onclick = () => window.open('https://t.me/tribute/app?startapp=dpSw','_blank');
-    document.getElementById('youtubeBtn').onclick = document.getElementById('youtubeMainBtn').onclick = () => window.open('https://www.youtube.com/@neurowebbb','_blank');
+    const creatorContent = document.getElementById('creator-content');
+    const dynamicBgCanvas = document.getElementById('dynamicBgCanvas');
+    const patternPicker = document.getElementById('patternPicker');
+    const solidColorPicker = document.getElementById('solidColorPicker');
 
-    const loader = document.getElementById('templateLoader');
-    loader.addEventListener('change', async e => {
+    const gradientColor1 = document.getElementById('gradientColor1');
+    const gradientColor2 = document.getElementById('gradientColor2');
+    const gradientDirection = document.getElementById('gradientDirection');
+    const gradientAnimate = document.getElementById('gradientAnimate');
+    const applyGradientBtn = document.getElementById('applyGradientBtn');
+
+    const newElementTextInput = document.getElementById('newElementText');
+    const addTextBtn = document.getElementById('addTextBtn');
+    const addButtonBtn = document.getElementById('addButtonBtn');
+    const addImageBtn = document.getElementById('addImageBtn');
+    const addDivBtn = document.getElementById('addDivBtn');
+
+    // Element Properties Inputs
+    const elementOpacityInput = document.getElementById('elementOpacity');
+    const elementFontFamilyInput = document.getElementById('elementFontFamily');
+    const elementFontSizeInput = document.getElementById('elementFontSize');
+    const elementWidthInput = document.getElementById('elementWidth');
+    const elementHeightInput = document.getElementById('elementHeight');
+    const elementBgColorInput = document.getElementById('elementBgColor');
+    const elementTextColorInput = document.getElementById('elementTextColor');
+    const elementBorderRadiusInput = document.getElementById('elementBorderRadius');
+    const elementBorderWidthInput = document.getElementById('elementBorderWidth');
+    const elementBorderStyleInput = document.getElementById('elementBorderStyle');
+    const elementBorderColorInput = document.getElementById('elementBorderColor');
+    const elementBoxShadowInput = document.getElementById('elementBoxShadow');
+    const elementTextShadowInput = document.getElementById('elementTextShadow');
+
+
+    let grapesEditor;
+    let selectedCreatorElement = null;
+    let isDragging = false;
+    let isResizing = false;
+    let dragOffsetX, dragOffsetY;
+    let resizeHandleType = '';
+    let initialWidth, initialHeight, initialMouseX, initialMouseY, initialLeft, initialTop;
+    let dynamicBgAnimationId = null; // For canvas animations
+
+    function createParticles() {
+        if (!particlesContainer) return;
+        particlesContainer.innerHTML = '';
+        const numParticles = 35;
+        for (let i = 0; i < numParticles; i++) {
+            const particle = document.createElement('div');
+            const isType2 = Math.random() > 0.65;
+            particle.classList.add('particle');
+            if (isType2) particle.classList.add('p2');
+            const size = Math.random() * (isType2 ? 2.8 : 2.2) + 0.8;
+            particle.style.width = `${size}px`; particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`; particle.style.top = `${Math.random() * 100}%`;
+            particle.style.setProperty('--float-x', `${(Math.random() - 0.5) * 220}px`);
+            particle.style.setProperty('--float-y', `${(Math.random() - 0.6) * 280}px`);
+            particle.style.setProperty('--float-scale', `${Math.random() * 0.5 + 0.5}`);
+            particle.style.setProperty('--particle-opacity-start', `${Math.random() * 0.25 + 0.4}`);
+            particle.style.setProperty('--particle-opacity-mid', `${Math.random() * 0.15 + 0.05}`);
+            particle.style.setProperty('--particle-opacity-end', `${Math.random() * 0.2 + 0.3}`);
+            particle.style.animationDuration = `${Math.random() * 20 + 18}s`;
+            particle.style.animationDelay = `${Math.random() * 22}s`;
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    function showView(viewToShow) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('header .controls .btn').forEach(b => b.classList.remove('active'));
+      viewToShow.classList.add('active');
+      if (viewToShow === editorView) {
+        tabEditor.classList.add('active');
+        if (!grapesEditor) initGrapesEditor();
+      } else {
+        tabCreator.classList.add('active');
+      }
+    }
+
+    enterBtn.onclick = () => {
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        splash.style.display = 'none'; app.style.display = 'flex';
+        showView(creatorView); createParticles();
+      }, 700);
+    };
+    splash.style.transition = "opacity 0.7s ease-out";
+
+    tabEditor.onclick = () => showView(editorView);
+    tabCreator.onclick = () => showView(creatorView);
+
+    function initGrapesEditor() {
+      grapesEditor = grapesjs.init({
+        container: '#editor-container', fromElement: false, height: '100%', storageManager: false,
+        plugins: ['gjs-preset-webpage'], pluginsOpts: { 'gjs-preset-webpage': {} },
+        canvas: { styles: ['body{max-width:1200px;margin:0 auto; background-color: #e8efff;}', '*{font-family: Helvetica, Arial, sans-serif;}'], scripts: [] },
+        components: '<div style="padding:25px; color:#222; font-family: Helvetica, Arial, sans-serif; text-align:center;">Пустой холст GrapesJS. Перетащите блоки из панели справа или начните создавать свой уникальный дизайн.</div>',
+        style: ''
+      });
+    }
+
+    loadTemplateBtn.onclick = () => templateLoader.click();
+    templateLoader.addEventListener('change', async e => {
       const file = e.target.files[0]; if (!file) return;
-      document.getElementById('splash').style.display='none';
-      title.style.display='none'; controls.style.display='none';
-      document.getElementById('app').style.display='flex';
-      const text = await file.text(); const doc=new DOMParser().parseFromString(text,'text/html');
-      let inlineCss=''; doc.querySelectorAll('style').forEach(s=>inlineCss+=s.innerHTML);
-      const cssLinks=[...doc.querySelectorAll('link[rel="stylesheet"]')].map(l=>l.href);
-      grapesjs.init({container:'#editor-container',fromElement:false,height:'100%',storageManager:false,plugins:['gjs-preset-webpage'],pluginsOpts:{'gjs-preset-webpage':{}},canvas:{styles:cssLinks.concat(['body{max-width:1200px;margin:0 auto;}']),scripts:[]},components:doc.body.innerHTML,style:inlineCss});
+      const text = await file.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      let css = ''; doc.querySelectorAll('style').forEach(s => css += s.innerHTML);
+      if (grapesEditor) grapesEditor.destroy();
+      document.getElementById('editor-container').innerHTML = '';
+      initGrapesEditor();
+      grapesEditor.setComponents(doc.body.innerHTML); grapesEditor.setStyle(css);
     });
-    document.getElementById('downloadBtn').addEventListener('click',()=>{const ed=grapesjs.editors[0];if(!ed)return alert('Загрузите шаблон!');const html=ed.getHtml(),css=ed.getCss();const full=`<!DOCTYPE html>\n<html lang=\"ru\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>index.html</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;const blob=new Blob([full],{type:'text/html'}),url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='index.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+
+    downloadBtn.onclick = () => {
+      if (!grapesEditor) { showCustomAlert('Редактор GrapesJS не активен или пуст!', 'error'); return; }
+      const html = grapesEditor.getHtml(); const css = grapesEditor.getCss();
+      const fullHtml = `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Созданный шаблон (GrapesJS)</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
+      downloadFile(fullHtml, 'template_grapesjs.html', 'text/html');
+    };
+
+    downloadSiteBtn.onclick = () => {
+        if (editorView.classList.contains('active')) { downloadBtn.onclick(); }
+        else if (creatorView.classList.contains('active')) { creatorDownloadBtn.onclick(); }
+    };
+
+    // --- Dynamic Background Canvas Animations ---
+    function stopDynamicBgAnimation() {
+        if (dynamicBgAnimationId) {
+            cancelAnimationFrame(dynamicBgAnimationId);
+            dynamicBgAnimationId = null;
+        }
+        const ctx = dynamicBgCanvas.getContext('2d');
+        ctx.clearRect(0, 0, dynamicBgCanvas.width, dynamicBgCanvas.height);
+        dynamicBgCanvas.style.display = 'none';
+         // Reset canvas animation data
+        rainDrops = [];
+        stars = [];
+    }
+
+    let rainDrops = [];
+    function digitalRainEffect() {
+        dynamicBgCanvas.style.display = 'block';
+        const ctx = dynamicBgCanvas.getContext('2d');
+        const W = dynamicBgCanvas.width = creatorContent.clientWidth;
+        const H = dynamicBgCanvas.height = creatorContent.clientHeight;
+        const fontSize = 14;
+        const columns = Math.floor(W / fontSize);
+        // Always re-initialize rain drops when starting the effect
+        rainDrops = [];
+        for (let i = 0; i < columns; i++) {
+            rainDrops[i] = 1;
+        }
+
+        function drawDigitalRain() {
+            ctx.fillStyle = "rgba(3, 7, 15, 0.1)"; // Slightly transparent black for fading effect
+            ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(); // Use accent color
+            ctx.font = `${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-mono').trim()}`;
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = String.fromCharCode(Math.random() * 128); // Random ASCII
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                if (rainDrops[i] * fontSize > H && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+            dynamicBgAnimationId = requestAnimationFrame(drawDigitalRain);
+        }
+        drawDigitalRain();
+    }
+
+    let stars = [];
+    function warpSpeedEffect() {
+        dynamicBgCanvas.style.display = 'block';
+        const ctx = dynamicBgCanvas.getContext('2d');
+        const W = dynamicBgCanvas.width = creatorContent.clientWidth;
+        const H = dynamicBgCanvas.height = creatorContent.clientHeight;
+        const numStars = 300;
+        const speed = 5; // Base speed
+
+        // Always re-initialize stars when starting the effect
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars[i] = {
+                x: Math.random() * W - W / 2, // Center origin
+                y: Math.random() * H - H / 2,
+                z: Math.random() * W,
+                pz: Math.random() * W // previous z
+            };
+        }
+
+        function drawWarpSpeed() {
+            ctx.fillStyle = "rgba(3, 5, 10, 0.2)"; // Fading effect
+            ctx.fillRect(0, 0, W, H);
+            ctx.save();
+            ctx.translate(W / 2, H / 2); // Move to center
+
+            for (let i = 0; i < numStars; i++) {
+                const star = stars[i];
+                star.z -= speed;
+                if (star.z < 1) { // Reset star
+                    star.z = W;
+                    star.x = Math.random() * W - W / 2;
+                    star.y = Math.random() * H - H / 2;
+                    star.pz = star.z;
+                }
+
+                const sx = star.x / star.z * W; // Perspective projection
+                const sy = star.y / star.z * H;
+                const r = Math.max(0.1, (1 - star.z / W) * 2.5); // Radius based on distance
+
+                ctx.beginPath();
+                ctx.arc(sx, sy, r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 234, 255, ${1 - star.z / W * 0.8})`; // Brighter closer
+                ctx.fill();
+
+                // Optional: draw a tail
+                const prev_sx = star.x / star.pz * W;
+                const prev_sy = star.y / star.pz * H;
+                ctx.beginPath();
+                ctx.moveTo(prev_sx, prev_sy);
+                ctx.lineTo(sx, sy);
+                ctx.strokeStyle = `rgba(170, 0, 255, ${0.5 * (1 - star.z / W)})`; // Secondary color tail
+                ctx.lineWidth = r * 1.5;
+                ctx.stroke();
+                star.pz = star.z;
+            }
+            ctx.restore();
+            dynamicBgAnimationId = requestAnimationFrame(drawWarpSpeed);
+        }
+        drawWarpSpeed();
+    }
+
+
+    function clearCreatorBackgroundStyles() {
+        stopDynamicBgAnimation(); // Stop any canvas animations and reset data
+        creatorContent.style.background = '';
+        creatorContent.style.backgroundImage = '';
+        creatorContent.style.backgroundColor = 'transparent';
+        creatorContent.classList.remove('animated-gradient-background', 'pattern-animated-grid', 'pattern-animated-dots', 'pattern-animated-lines', 'pattern-hexagonal-mesh');
+        creatorContent.style.removeProperty('--gradient-color-1');
+        creatorContent.style.removeProperty('--gradient-color-2');
+        creatorContent.style.removeProperty('--gradient-direction');
+    }
+
+    solidColorPicker.oninput = e => {
+        clearCreatorBackgroundStyles();
+        creatorContent.style.backgroundColor = e.target.value;
+        patternPicker.value = 'none';
+        gradientAnimate.checked = false;
+    };
+
+    patternPicker.onchange = e => {
+        clearCreatorBackgroundStyles();
+        const selectedPatternClass = e.target.value;
+        if (selectedPatternClass === 'pattern-digital-rain') {
+            digitalRainEffect();
+        } else if (selectedPatternClass === 'pattern-warp-speed') {
+            warpSpeedEffect();
+        } else if (selectedPatternClass !== 'none') {
+            creatorContent.classList.add(selectedPatternClass);
+        }
+        // Reset color picker and gradient options when a pattern is selected
+        solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+        gradientAnimate.checked = false;
+        // Ensure gradient styles are removed if a pattern is selected
+        creatorContent.style.background = '';
+        creatorContent.style.backgroundImage = '';
+    };
+
+    applyGradientBtn.onclick = () => {
+        clearCreatorBackgroundStyles();
+        const c1 = gradientColor1.value; const c2 = gradientColor2.value;
+        const dir = gradientDirection.value; const anim = gradientAnimate.checked;
+        creatorContent.style.setProperty('--gradient-color-1', c1);
+        creatorContent.style.setProperty('--gradient-color-2', c2);
+        creatorContent.style.setProperty('--gradient-direction', dir);
+        if (anim) { creatorContent.classList.add('animated-gradient-background'); }
+        else { creatorContent.style.background = `linear-gradient(${dir}, ${c1}, ${c2})`; }
+        // Reset color picker and pattern options when gradient is applied
+        solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+        patternPicker.value = 'none';
+    };
+
+    function addElementToCreator(elementType) {
+        let el;
+        const textContent = newElementTextInput.value || `Новый ${elementType}`;
+        switch(elementType) {
+            case 'Text':
+                el = document.createElement('div'); el.textContent = textContent;
+                el.style.padding = '10px'; el.style.color = elementTextColorInput.value;
+                el.style.fontFamily = elementFontFamilyInput.value;
+                el.style.fontSize = elementFontSizeInput.value || '16px';
+                break;
+            case 'Button':
+                el = document.createElement('button'); el.textContent = textContent;
+                el.style.padding = '12px 20px'; el.style.border = '1px solid var(--accent)';
+                el.style.backgroundColor = 'rgba(0,0,0,0.5)'; el.style.color = 'var(--accent)';
+                el.style.cursor = 'pointer'; el.style.fontFamily = elementFontFamilyInput.value;
+                el.style.fontSize = elementFontSizeInput.value || '14px';
+                el.style.borderRadius = '5px'; el.style.letterSpacing = '1.2px';
+                break;
+            case 'Image':
+                const src = prompt("Введите URL изображения:", "https://placehold.co/220x160/0eafff/06070f?text=ГрафОбъект&font=exo2");
+                if (!src) return;
+                el = document.createElement('img'); el.src = src; el.alt = textContent;
+                el.style.maxWidth = '100%'; el.style.height = 'auto';
+                el.style.border = '1px solid rgba(0,234,255,0.25)'; el.style.borderRadius = '4px';
+                el.onerror = () => { el.src = 'https://placehold.co/220x160/ff3b6f/fff?text=ОшибкаURL&font=exo2'; showCustomAlert('Не удалось загрузить изображение.', 'error');};
+                break;
+            case 'Div':
+                el = document.createElement('div'); el.textContent = textContent;
+                el.style.padding = '25px'; el.style.minHeight = '70px'; el.style.minWidth = '140px';
+                el.style.backgroundColor = 'rgba(0,234,255,0.06)';
+                el.style.border = '1px dashed var(--accent-secondary)';
+                el.style.color = elementTextColorInput.value;
+                el.style.fontFamily = elementFontFamilyInput.value;
+                el.style.fontSize = elementFontSizeInput.value || '16px';
+                break;
+        }
+        if (el) {
+            el.style.opacity = elementOpacityInput.value; // Apply initial opacity
+            creatorContent.appendChild(el); // Append first to get dimensions
+            makeElementEditable(el);
+            newElementTextInput.value = '';
+        }
+    }
+    addTextBtn.onclick = () => addElementToCreator('Text');
+    addButtonBtn.onclick = () => addElementToCreator('Button');
+    addImageBtn.onclick = () => addElementToCreator('Image');
+    addDivBtn.onclick = () => addElementToCreator('Div');
+
+    function makeElementEditable(el) {
+      el.classList.add('editable-element');
+      el.style.position = 'absolute';
+
+      // Set initial size based on content after appending
+      el.style.width = `${el.offsetWidth}px`;
+      el.style.height = `${el.offsetHeight}px`;
+
+      const creatorRect = creatorContent.getBoundingClientRect();
+      const initialLeftPos = creatorContent.scrollLeft + Math.min(30, creatorContent.clientWidth - el.offsetWidth - 10);
+      const initialTopPos = creatorContent.scrollTop + Math.min(30, creatorContent.clientHeight - el.offsetHeight - 10);
+      el.style.left = `${initialLeftPos}px`;
+      el.style.top = `${initialTopPos}px`;
+
+      el.addEventListener('mousedown', onElementMouseDown);
+      el.addEventListener('dragstart', (e) => e.preventDefault());
+    }
+
+    function onElementMouseDown(e) {
+      if (e.target.classList.contains('resize-handle')) return;
+      e.stopPropagation(); selectElement(this);
+      isDragging = true; isResizing = false;
+      dragOffsetX = e.clientX - parseFloat(this.style.left || 0);
+      dragOffsetY = e.clientY - parseFloat(this.style.top || 0);
+      document.addEventListener('mousemove', onElementMouseMove);
+      document.addEventListener('mouseup', onElementMouseUp);
+    }
+
+    function onElementMouseMove(e) {
+      if (!selectedCreatorElement) return;
+      if (isDragging) {
+        let newX = e.clientX - dragOffsetX;
+        let newY = e.clientY - dragOffsetY;
+        selectedCreatorElement.style.left = `${newX}px`;
+        selectedCreatorElement.style.top = `${newY}px`;
+      } else if (isResizing && selectedCreatorElement) {
+        const currentX = e.clientX;
+        const currentY = e.clientY;
+        let newWidth = initialWidth;
+        let newHeight = initialHeight;
+        let newLeft = initialLeft;
+        let newTop = initialTop;
+        const dx = currentX - initialMouseX;
+        const dy = currentY - initialMouseY;
+
+        // Calculate new dimensions and position based on handle type
+        if (resizeHandleType.includes('e')) newWidth = initialWidth + dx;
+        if (resizeHandleType.includes('w')) { newWidth = initialWidth - dx; newLeft = initialLeft + dx; }
+        if (resizeHandleType.includes('s')) newHeight = initialHeight + dy;
+        if (resizeHandleType.includes('n')) { newHeight = initialHeight - dy; newTop = initialTop + dy; }
+
+        // Apply minimum dimensions
+        newWidth = Math.max(selectedCreatorElement.style.minWidth ? parseFloat(selectedCreatorElement.style.minWidth) : 30, newWidth);
+        newHeight = Math.max(selectedCreatorElement.style.minHeight ? parseFloat(selectedCreatorElement.style.minHeight) : 20, newHeight);
+
+        // Update element styles
+        selectedCreatorElement.style.width = `${newWidth}px`;
+        selectedCreatorElement.style.height = `${newHeight}px`;
+        selectedCreatorElement.style.left = `${newLeft}px`; // Always update left/top as they might change with w/n handles
+        selectedCreatorElement.style.top = `${newTop}px`;
+
+        updatePropertyInputs(selectedCreatorElement); // Update sidebar with new dimensions
+      }
+    }
+
+    function onElementMouseUp(e) {
+      isDragging = false; isResizing = false;
+      document.removeEventListener('mousemove', onElementMouseMove);
+      document.removeEventListener('mouseup', onElementMouseUp);
+    }
+
+    function selectElement(el) {
+      if (selectedCreatorElement && selectedCreatorElement !== el) {
+        selectedCreatorElement.classList.remove('selected'); removeResizeHandles(selectedCreatorElement);
+      }
+      if (selectedCreatorElement !== el) {
+        selectedCreatorElement = el; selectedCreatorElement.classList.add('selected');
+        addResizeHandles(selectedCreatorElement); updatePropertyInputs(selectedCreatorElement);
+      }
+    }
+
+    function deselectAllElements() {
+      if (selectedCreatorElement) {
+        selectedCreatorElement.classList.remove('selected'); removeResizeHandles(selectedCreatorElement);
+        selectedCreatorElement = null; clearPropertyInputs();
+      }
+    }
+    creatorContent.addEventListener('mousedown', (e) => { if (e.target === creatorContent || e.target === dynamicBgCanvas) deselectAllElements(); });
+
+    function addResizeHandles(el) {
+      removeResizeHandles(el);
+      const handleTypes = ['nw', 'ne', 'sw', 'se', 'n', 's', 'w', 'e'];
+      handleTypes.forEach(type => {
+        const handle = document.createElement('div'); handle.classList.add('resize-handle', type);
+        handle.addEventListener('mousedown', onResizeHandleMouseDown); el.appendChild(handle);
+      });
+    }
+    function removeResizeHandles(el) { el.querySelectorAll('.resize-handle').forEach(handle => handle.remove()); }
+
+    function onResizeHandleMouseDown(e) {
+      e.stopPropagation(); e.preventDefault(); isResizing = true; isDragging = false;
+      resizeHandleType = Array.from(this.classList).find(c => c.length <= 2 && c !== 'resize-handle');
+      // Use clientWidth/clientHeight for initial dimensions as style.width/height might be empty
+      initialWidth = selectedCreatorElement.clientWidth;
+      initialHeight = selectedCreatorElement.clientHeight;
+      initialMouseX = e.clientX; initialMouseY = e.clientY;
+      initialLeft = parseFloat(selectedCreatorElement.style.left || 0);
+      initialTop = parseFloat(selectedCreatorElement.style.top || 0);
+      document.addEventListener('mousemove', onElementMouseMove);
+      document.addEventListener('mouseup', onElementMouseUp);
+    }
+
+    deleteBtn.onclick = () => {
+      if (selectedCreatorElement) {
+        selectedCreatorElement.remove(); selectedCreatorElement = null; clearPropertyInputs();
+        showCustomAlert("Модуль успешно удален.", "success");
+      } else { showCustomAlert("Объект для удаления не выбран.", "error"); }
+    };
+
+    function updatePropertyInputs(element) {
+        if (!element) return;
+        elementOpacityInput.value = element.style.opacity || '1';
+        elementFontFamilyInput.value = element.style.fontFamily || getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
+        elementFontSizeInput.value = element.style.fontSize || '';
+        // Display current computed width/height if inline styles are not set
+        elementWidthInput.value = element.style.width || `${element.clientWidth}px`;
+        elementHeightInput.value = element.style.height || `${element.clientHeight}px`;
+        elementBgColorInput.value = rgbToHex(element.style.backgroundColor) || getComputedStyle(document.documentElement).getPropertyValue('--bg-medium').trim();
+        elementTextColorInput.value = rgbToHex(element.style.color) || getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+        elementBorderRadiusInput.value = element.style.borderRadius || '';
+        elementBorderWidthInput.value = element.style.borderWidth || '';
+        elementBorderStyleInput.value = element.style.borderStyle || 'none';
+        elementBorderColorInput.value = rgbToHex(element.style.borderColor) || getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        elementBoxShadowInput.value = element.style.boxShadow || '';
+        elementTextShadowInput.value = element.style.textShadow || '';
+    }
+    function clearPropertyInputs() {
+        elementOpacityInput.value = '1';
+        elementFontFamilyInput.value = getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
+        elementFontSizeInput.value = '';
+        elementWidthInput.value = ''; elementHeightInput.value = '';
+        elementBgColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-medium').trim();
+        elementTextColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+        elementBorderRadiusInput.value = ''; elementBorderWidthInput.value = '';
+        elementBorderStyleInput.value = 'none';
+        elementBorderColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        elementBoxShadowInput.value = ''; elementTextShadowInput.value = '';
+    }
+
+    // Event listeners for new property inputs
+    elementOpacityInput.oninput = (e) => updateElementStyle('opacity', e.target.value);
+    elementFontFamilyInput.onchange = (e) => updateElementStyle('fontFamily', e.target.value);
+    elementFontSizeInput.onchange = (e) => updateElementStyle('fontSize', e.target.value);
+    elementBorderRadiusInput.onchange = (e) => updateElementStyle('borderRadius', e.target.value);
+    elementBorderWidthInput.onchange = (e) => updateElementStyle('borderWidth', e.target.value);
+    elementBorderStyleInput.onchange = (e) => updateElementStyle('borderStyle', e.target.value);
+    elementBorderColorInput.oninput = (e) => updateElementStyle('borderColor', e.target.value);
+    elementBoxShadowInput.onchange = (e) => updateElementStyle('boxShadow', e.target.value);
+    elementTextShadowInput.onchange = (e) => updateElementStyle('textShadow', e.target.value);
+    // Existing listeners
+    elementWidthInput.onchange = (e) => updateElementStyle('width', e.target.value);
+    elementHeightInput.onchange = (e) => updateElementStyle('height', e.target.value);
+    elementBgColorInput.oninput = (e) => updateElementStyle('backgroundColor', e.target.value);
+    elementTextColorInput.oninput = (e) => updateElementStyle('color', e.target.value);
+
+
+    function updateElementStyle(property, value) { if (selectedCreatorElement) selectedCreatorElement.style[property] = value; }
+
+    function rgbToHex(rgb) {
+        if (!rgb || rgb === 'transparent' || rgb === '') return null;
+        let match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d\.]+)?\)$/);
+        if (!match) return rgb;
+        function hex(x) { return ("0" + parseInt(x).toString(16)).slice(-2); }
+        return "#" + hex(match[1]) + hex(match[2]) + hex(match[3]);
+    }
+
+    creatorDownloadBtn.onclick = () => {
+        let contentHtml = '';
+        creatorContent.querySelectorAll('.editable-element').forEach(el => {
+            const clone = el.cloneNode(true);
+            clone.classList.remove('selected', 'editable-element');
+            clone.querySelectorAll('.resize-handle').forEach(h => h.remove());
+
+            // Consolidate all inline styles for the clone
+            let inlineStyles = `position: absolute; left: ${el.style.left}; top: ${el.style.top}; width: ${el.style.width || el.clientWidth + 'px'}; height: ${el.style.height || el.clientHeight + 'px'};`;
+            // Add other relevant styles that were applied dynamically
+            if (el.style.opacity) inlineStyles += ` opacity: ${el.style.opacity};`;
+            if (el.style.fontFamily) inlineStyles += ` font-family: ${el.style.fontFamily};`;
+            if (el.style.fontSize) inlineStyles += ` font-size: ${el.style.fontSize};`;
+            if (el.style.backgroundColor) inlineStyles += ` background-color: ${el.style.backgroundColor};`;
+            if (el.style.color) inlineStyles += ` color: ${el.style.color};`;
+            if (el.style.borderRadius) inlineStyles += ` border-radius: ${el.style.borderRadius};`;
+            if (el.style.borderWidth) inlineStyles += ` border-width: ${el.style.borderWidth};`;
+            if (el.style.borderStyle && el.style.borderStyle !=='none') inlineStyles += ` border-style: ${el.style.borderStyle};`;
+            if (el.style.borderColor) inlineStyles += ` border-color: ${el.style.borderColor};`;
+            if (el.style.boxShadow) inlineStyles += ` box-shadow: ${el.style.boxShadow};`;
+            if (el.style.textShadow) inlineStyles += ` text-shadow: ${el.style.textShadow};`;
+            if (el.style.padding) inlineStyles += ` padding: ${el.style.padding};`; // Common for text/divs
+            // For buttons, specific border might be set by default, ensure it's captured if not overridden
+            if (el.tagName === 'BUTTON' && el.style.border) inlineStyles += ` border: ${el.style.border};`;
+
+
+            clone.setAttribute('style', inlineStyles);
+            contentHtml += clone.outerHTML + '\n';
+        });
+
+        let bodyFontFamily = getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
+        let bodyColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+        let bodyStyles = `position: relative; width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow: auto; font-family: ${bodyFontFamily}; color: ${bodyColor};`;
+        let bodyClasses = [];
+        let extraCss = "/* NeuroWeb Creator Generated Styles - v5 */\n";
+        extraCss += `body { ${bodyStyles} }\n`;
+
+        // Background: Solid Color
+        if (creatorContent.style.backgroundColor && creatorContent.style.backgroundColor !== 'transparent' && !creatorContent.classList.contains('animated-gradient-background') && patternPicker.value === 'none') {
+            extraCss += `body { background-color: ${creatorContent.style.backgroundColor} !important; background-image: none !important; }\n`;
+        }
+
+        // Background: Animated Patterns (CSS based)
+        const activePattern = patternPicker.value;
+        if (activePattern !== 'none' && !activePattern.includes('digital-rain') && !activePattern.includes('warp-speed')) { // CSS patterns
+            bodyClasses.push(activePattern);
+            // Include CSS keyframes for downloaded file
+            if (activePattern === 'pattern-animated-grid') extraCss += `.pattern-animated-grid { background-image: linear-gradient(rgba(0,234,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,234,255,0.07) 1px, transparent 1px); background-size: 25px 25px; animation: moveGrid 8s linear infinite; } @keyframes moveGrid { 0% { background-position: 0 0; } 100% { background-position: 25px 25px; } }\n`;
+            if (activePattern === 'pattern-animated-dots') extraCss += `.pattern-animated-dots { background-image: radial-gradient(rgba(0,234,255,0.15) 1px, transparent 1px); background-size: 18px 18px; animation: pulseDots 4s ease-in-out infinite alternate; } @keyframes pulseDots { 0% { background-size: 18px 18px; opacity: 0.6; } 100% { background-size: 22px 22px; opacity: 1; } }\n`;
+            if (activePattern === 'pattern-animated-lines') extraCss += `.pattern-animated-lines { background: repeating-linear-gradient( 60deg, rgba(0,234,255,0.03), rgba(0,234,255,0.03) 8px, rgba(0,234,255,0.06) 8px, rgba(0,234,255,0.06) 16px ); background-size: 150% 150%; animation: moveLines 10s linear infinite; } @keyframes moveLines { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }\n`;
+            if (activePattern === 'pattern-hexagonal-mesh') extraCss += `.pattern-hexagonal-mesh { --hex-color: rgba(0, 234, 255, 0.08); --hex-size: 30px; background-image: linear-gradient(30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)), linear-gradient(-30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)), linear-gradient(90deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)); background-size: calc(var(--hex-size) * 1.732) var(--hex-size); animation: moveHexMesh 20s linear infinite; } @keyframes moveHexMesh { 0% { background-position: 0 0; } 100% { background-position: calc(var(--hex-size) * 1.732 * 2) calc(var(--hex-size) * 2); } }\n`;
+        }
+
+        // Background: Gradient
+        const gradColor1Val = creatorContent.style.getPropertyValue('--gradient-color-1') || gradientColor1.value;
+        const gradColor2Val = creatorContent.style.getPropertyValue('--gradient-color-2') || gradientColor2.value;
+        const gradDirectionVal = creatorContent.style.getPropertyValue('--gradient-direction') || gradientDirection.value;
+
+        if (creatorContent.classList.contains('animated-gradient-background')) {
+            bodyClasses.push('animated-gradient-background');
+            extraCss += `.animated-gradient-background { background-size: 200% 200% !important; animation: gradientAnimation 10s ease infinite alternate; background-image: linear-gradient(${gradDirectionVal}, ${gradColor1Val}, ${gradColor2Val}) !important; }\n @keyframes gradientAnimation {0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }\n`;
+        } else if (creatorContent.style.background.includes('linear-gradient')) {
+             extraCss += `body { background-image: linear-gradient(${gradDirectionVal}, ${gradColor1Val}, ${gradColor2Val}) !important; background-color: transparent !important; }\n`;
+        }
+
+        // Default body background if nothing specific is set
+        if (!creatorContent.style.backgroundColor && activePattern === 'none' && !creatorContent.style.background.includes('linear-gradient')) {
+             extraCss += `body { background-color: ${getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim()}; }\n`
+        }
+
+        // Script for Canvas Backgrounds if selected
+        let canvasScript = '';
+        if (activePattern === 'pattern-digital-rain' || activePattern === 'pattern-warp-speed') {
+            canvasScript = `<script>\n`;
+            canvasScript += `const dynamicBgCanvas = document.createElement('canvas');\n`;
+            canvasScript += `dynamicBgCanvas.id = 'downloadedDynamicBgCanvas';\n`;
+            canvasScript += `dynamicBgCanvas.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;';\n`; // Use cssText for multiple styles
+            canvasScript += `document.body.insertBefore(dynamicBgCanvas, document.body.firstChild);\n`;
+            canvasScript += `const ctx = dynamicBgCanvas.getContext('2d');\n`;
+            canvasScript += `let dynamicBgAnimationId_dl = null;\n`;
+
+            if (activePattern === 'pattern-digital-rain') {
+                extraCss += `body { background-color: #03070f !important; overflow: hidden !important; }\n`; // Ensure body bg for rain
+                canvasScript += `let rainDrops_dl = [];\n`;
+                canvasScript += `function digitalRainEffect_dl() {
+                                    const W = dynamicBgCanvas.width = window.innerWidth; const H = dynamicBgCanvas.height = window.innerHeight;
+                                    const fontSize = 14; const columns = Math.floor(W / fontSize);
+                                    if (rainDrops_dl.length === 0) { for (let i = 0; i < columns; i++) rainDrops_dl[i] = 1; }
+                                    ctx.fillStyle = "rgba(3, 7, 15, 0.1)"; ctx.fillRect(0, 0, W, H);
+                                    ctx.fillStyle = "${getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()}";
+                                    ctx.font = \`\${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-mono').trim()}\`;
+                                    for (let i = 0; i < rainDrops_dl.length; i++) {
+                                        const text = String.fromCharCode(Math.random() * 128); ctx.fillText(text, i * fontSize, rainDrops_dl[i] * fontSize);
+                                        if (rainDrops_dl[i] * fontSize > H && Math.random() > 0.975) rainDrops_dl[i] = 0;
+                                        rainDrops_dl[i]++;
+                                    }
+                                    dynamicBgAnimationId_dl = requestAnimationFrame(digitalRainEffect_dl);
+                                 }\n digitalRainEffect_dl();\n`;
+            } else if (activePattern === 'pattern-warp-speed') {
+                extraCss += `body { background-color: #03050a !important; overflow: hidden !important; }\n`; // Ensure body bg for warp
+                canvasScript += `let stars_dl = [];\n`;
+                canvasScript += `function warpSpeedEffect_dl() {
+                                    const W = dynamicBgCanvas.width = window.innerWidth; const H = dynamicBgCanvas.height = window.innerHeight;
+                                    const numStars = 300; const speed = 5;
+                                    if (stars_dl.length === 0) { for (let i = 0; i < numStars; i++) stars_dl[i] = { x: Math.random()*W-W/2, y: Math.random()*H-H/2, z: Math.random()*W, pz: Math.random()*W };}
+                                    ctx.fillStyle = "rgba(3, 5, 10, 0.2)"; ctx.fillRect(0, 0, W, H); ctx.save(); ctx.translate(W/2, H/2);
+                                    for (let i = 0; i < stars_dl.length; i++) {
+                                        const star = stars_dl[i]; star.z -= speed;
+                                        if (star.z < 1) { star.z = W; star.x = Math.random()*W-W/2; star.y = Math.random()*H-H/2; star.pz = star.z; }
+                                        const sx = star.x/star.z*W; const sy = star.y/star.z*H; const r = Math.max(0.1, (1-star.z/W)*2.5);
+                                        ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fillStyle = \`rgba(0, 234, 255, \${1-star.z/W*0.8})\`; ctx.fill();
+                                        const prev_sx = star.x/star.pz*W; const prev_sy = star.y/star.pz*H;
+                                        ctx.beginPath(); ctx.moveTo(prev_sx, prev_sy); ctx.lineTo(sx, sy);
+                                        ctx.strokeStyle = \`rgba(170, 0, 255, \${0.5*(1-star.z/W)})\`; ctx.lineWidth = r*1.5; ctx.stroke(); star.pz = star.z;
+                                    } ctx.restore(); dynamicBgAnimationId_dl = requestAnimationFrame(warpSpeedEffect_dl);
+                                 }\n warpSpeedEffect_dl();\n`;
+            }
+            canvasScript += `window.addEventListener('resize', () => { dynamicBgCanvas.width = window.innerWidth; dynamicBgCanvas.height = window.innerHeight; if ('${activePattern}' === 'pattern-digital-rain') rainDrops_dl = []; if ('${activePattern}' === 'pattern-warp-speed') stars_dl = []; });\n`; // Resize handler
+            canvasScript += `<\/script>\n`; // Escaped closing script tag
+        }
+
+        // Include Google Fonts links in the downloaded HTML
+        let fontLinks = `
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+`;
+
+
+        const fullHtml = `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>NeuroWeb Creator - Композиция</title>\n${fontLinks}<style>\n${extraCss}\n</style>\n</head>\n<body class="${bodyClasses.join(' ')}">\n${contentHtml}\n${canvasScript}</body>\n</html>`;
+        downloadFile(fullHtml, 'neuroweb_composition_v5.html', 'text/html');
+        showCustomAlert("Композиция успешно сохранена!", "success");
+    };
+
+    function downloadFile(content, fileName, contentType) {
+      const a = document.createElement('a');
+      const file = new Blob([content], { type: contentType });
+      a.href = URL.createObjectURL(file); a.download = fileName;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(a.href);
+    }
+
+    function showCustomAlert(message, type = 'info') { // success, error, info
+        let alertBox = document.getElementById('customAlertBox');
+        if (!alertBox) {
+            alertBox = document.createElement('div'); alertBox.id = 'customAlertBox';
+            alertBox.style.cssText = `position: fixed; top: -120px; left: 50%; transform: translateX(-50%); padding: 18px 30px; background-color: var(--surface); color: var(--text); border: 1.5px solid var(--accent); border-radius: 8px; box-shadow: 0 6px 25px rgba(0,0,0,0.6); z-index: 2000; font-family: var(--font-main); font-size: 1rem; letter-spacing: 0.8px; opacity: 0; transition: opacity 0.45s ease, top 0.45s cubic-bezier(0.68, -0.6, 0.27, 1.55); text-align: center; min-width: 320px;`;
+            document.body.appendChild(alertBox);
+        }
+        alertBox.textContent = message;
+        let borderColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        let textColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        let glowColor = getComputedStyle(document.documentElement).getPropertyValue('--neon-glow').trim();
+
+        if (type === 'error') {
+            borderColor = getComputedStyle(document.documentElement).getPropertyValue('--danger-color').trim();
+            textColor = borderColor;
+            glowColor = borderColor;
+        } else if (type === 'success') {
+            borderColor = getComputedStyle(document.documentElement).getPropertyValue('--success-color').trim();
+            textColor = borderColor;
+            glowColor = borderColor;
+        }
+        alertBox.style.borderColor = borderColor;
+        alertBox.style.color = textColor;
+        alertBox.style.boxShadow = `0 0 12px ${glowColor}, 0 6px 25px rgba(0,0,0,0.6)`;
+
+        setTimeout(() => { alertBox.style.top = '35px'; alertBox.style.opacity = '1'; }, 50);
+        setTimeout(() => { alertBox.style.opacity = '0'; alertBox.style.top = '-120px';}, 3800);
+    }
+    // Ensure all buttons with text have span wrappers for the ::before pseudo-element fix
+    document.querySelectorAll('.btn').forEach(btn => {
+        if (!btn.querySelector('span') && btn.textContent.trim() !== '') {
+            btn.innerHTML = `<span>${btn.innerHTML}</span>`;
+        }
+    });
+
+    // Add resize event listener for canvas backgrounds
+    window.addEventListener('resize', () => {
+        if (patternPicker.value === 'pattern-digital-rain' || patternPicker.value === 'pattern-warp-speed') {
+             // Update canvas dimensions and re-render
+            dynamicBgCanvas.width = creatorContent.clientWidth;
+            dynamicBgCanvas.height = creatorContent.clientHeight;
+            // Re-initialize data for canvas effects on resize
+            if (patternPicker.value === 'pattern-digital-rain') rainDrops = [];
+            if (patternPicker.value === 'pattern-warp-speed') stars = [];
+            // The animation loop will handle the redraw
+        }
+    });
+
+    // Initial canvas size setup on load
+    window.onload = function() {
+        if (dynamicBgCanvas && creatorContent) {
+             dynamicBgCanvas.width = creatorContent.clientWidth;
+             dynamicBgCanvas.height = creatorContent.clientHeight;
+             // If a canvas pattern is selected by default, start its animation
+             if (patternPicker.value === 'pattern-digital-rain') digitalRainEffect();
+             if (patternPicker.value === 'pattern-warp-speed') warpSpeedEffect();
+        }
+         createParticles(); // Also create particles on load
+    };
+
   </script>
 </body>
 </html>
