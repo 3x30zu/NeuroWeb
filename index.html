@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuroWeb Template Creator v5</title>
+  <title>NeuroWeb Template Creator v7</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
@@ -18,20 +18,19 @@
   <script src="https://unpkg.com/grapesjs-preset-webpage/dist/grapesjs-preset-webpage.min.js"></script>
   <style>
     :root{
-      --bg-dark: #06070f;
-      --bg-medium: #0e101f;
-      --surface: rgba(12, 15, 30, 0.9);
-      --text: #dde4ff;
-      --text-secondary: #a0b0d0;
-      --accent: #00eaff;
-      --accent-secondary: #aa00ff;
-      --neon-glow: rgba(0, 234, 255, 0.5);
-      --neon-glow-secondary: rgba(170, 0, 255, 0.5);
+      --bg-dark: #04050a; /* Slightly darker for more contrast */
+      --bg-medium: #0a0c16; /* Adjusted medium */
+      --surface: rgba(8, 10, 20, 0.88); /* More opaque surface */
+      --text: #e8f0ff; /* Slightly brighter text */
+      --text-secondary: #bac8e0;
+      --accent: #00f8ff; /* Main accent - vibrant cyan */
+      --accent-secondary: #d000ff; /* Secondary accent - vibrant magenta */
+      --neon-glow: rgba(0, 248, 255, 0.7);
+      --neon-glow-secondary: rgba(208, 0, 255, 0.7);
       --handle-color: var(--accent-secondary);
-      --danger-color: #ff3b6f;
-      --success-color: #00ffaa;
-      --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      /* Updated default font stack */
+      --danger-color: #ff3b6f; /* More vibrant danger */
+      --success-color: #00ffab; /* Consistent success */
+      --transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       --font-main: 'Exo 2', 'Orbitron', 'Lato', 'Montserrat', sans-serif;
       --font-mono: 'Roboto Mono', monospace;
     }
@@ -40,8 +39,10 @@
     body,html{width:100%;height:100%;overflow:hidden;font-family:var(--font-main);background:var(--bg-dark);color:var(--text);}
 
     body {
-      background: linear-gradient(60deg, var(--bg-dark) 0%, #0a0c1a 30%, #080a16 70%, var(--bg-dark) 100%);
-      animation: subtleBodyGradientShift 50s ease infinite;
+      /* Enhanced body gradient with more movement */
+      background: linear-gradient(60deg, var(--bg-dark) 0%, #070912 20%, #05070e 80%, var(--bg-dark) 100%);
+      background-size: 250% 250%;
+      animation: subtleBodyGradientShift 25s ease infinite;
     }
     @keyframes subtleBodyGradientShift {
       0%, 100% { background-position: 0% 50%; }
@@ -54,206 +55,449 @@
     }
     .particle {
       position: absolute; background-color: var(--accent); border-radius: 50%;
-      opacity: 0; animation: float 25s infinite ease-in-out;
-      filter: blur(1px);
+      opacity: 0; animation: float 20s infinite ease-in-out; /* Faster base float */
+      filter: blur(1.5px); /* Slightly more blur */
     }
-    .particle.p2 { background-color: var(--accent-secondary); animation-duration: 30s; filter: blur(1.5px); }
+    .particle.p2 { background-color: var(--accent-secondary); animation-duration: 25s; filter: blur(2px); }
+    /* Enhanced particle floating animation */
     @keyframes float {
-      0%, 100% { transform: translateY(40px) translateX(20px) scale(0.6); opacity: 0; }
-      10% { opacity: var(--particle-opacity-start, 0.5); }
-      50% { transform: translateY(var(--float-y)) translateX(var(--float-x)) scale(var(--float-scale)); opacity: var(--particle-opacity-mid, 0.15); }
-      90% { opacity: var(--particle-opacity-end, 0.4); }
+      0%, 100% { transform: translateY(60px) translateX(40px) scale(0.4); opacity: 0; }
+      10% { opacity: var(--particle-opacity-start, 0.7); } /* Brighter start */
+      50% { transform: translateY(var(--float-y)) translateX(var(--float-x)) scale(var(--float-scale)); opacity: var(--particle-opacity-mid, 0.3); }
+      90% { opacity: var(--particle-opacity-end, 0.6); } /* Brighter end */
     }
 
-    #splash{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;z-index:1000; transition: opacity 0.7s ease-out;}
+    #splash{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;z-index:1000; transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);} /* Enhanced transition */
     #splash-bg-grid {
         position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1;
         background-image:
-            linear-gradient(rgba(0, 234, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 234, 255, 0.05) 1px, transparent 1px);
-        background-size: 30px 30px;
-        animation: moveSplashGrid 15s linear infinite;
+            linear-gradient(rgba(0, 248, 255, 0.07) 1.2px, transparent 1.2px), /* Thinner, more subtle grid lines */
+            linear-gradient(90deg, rgba(0, 248, 255, 0.07) 1.2px, transparent 1.2px);
+        background-size: 40px 40px; /* Slightly larger grid */
+        animation: moveSplashGrid 10s linear infinite, pulseGridOpacity 7s ease-in-out infinite alternate;
     }
     @keyframes moveSplashGrid {
         0% { background-position: 0 0; }
-        100% { background-position: 60px 30px; }
+        100% { background-position: 80px 40px; } /* Faster movement */
     }
-    .neon-title{font-size:clamp(2.8rem, 12vw, 4.5rem);color:var(--accent);text-shadow:0 0 6px var(--accent), 0 0 12px var(--accent), 0 0 25px var(--neon-glow), 0 0 40px var(--neon-glow), 0 0 60px var(--accent-secondary);animation:flicker 2.5s infinite alternate, pulseText 4s ease-in-out infinite; letter-spacing: 2px;}
-    @keyframes pulseText { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.02); opacity: 1;} }
-    #enterBtn { margin-top: 2.5rem; animation: pulseButton 2.2s infinite ease-in-out; font-size: 0.9rem; padding: 0.8rem 1.8rem;}
+    @keyframes pulseGridOpacity {
+        0% { opacity: 0.4; } /* More subtle pulse */
+        100% { opacity: 0.9; }
+    }
+    /* Enhanced neon title animation */
+    .neon-title{
+        font-size:clamp(3.2rem, 14vw, 5.5rem);color:var(--accent);
+        text-shadow:
+            0 0 8px var(--accent), 0 0 18px var(--accent),
+            0 0 35px var(--neon-glow), 0 0 55px var(--neon-glow),
+            0 0 80px var(--accent-secondary), 0 0 120px var(--accent-secondary); /* Intensified glow */
+        animation: flicker 1.8s infinite alternate, pulseText 3s ease-in-out infinite, titleShine 5s linear infinite; /* Added shine */
+        letter-spacing: 3px;
+    }
+    @keyframes pulseText { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.04); opacity: 1;} }
+    @keyframes flicker { /* More pronounced flicker */
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {text-shadow: 0 0 6px var(--accent), 0 0 12px var(--accent), 0 0 25px var(--neon-glow), 0 0 40px var(--neon-glow), 0 0 60px var(--accent-secondary), 0 0 90px var(--accent-secondary); opacity: 1;}
+      20%, 24%, 55% {text-shadow: none; opacity: 0.7;}
+    }
+    @keyframes titleShine { /* New shine animation for title */
+        0% { text-shadow: 0 0 8px var(--accent), 0 0 18px var(--accent), 0 0 35px var(--neon-glow), 0 0 55px var(--neon-glow), 0 0 80px var(--accent-secondary), 0 0 120px var(--accent-secondary); }
+        50% { text-shadow: 0 0 10px #fff, 0 0 20px var(--accent), 0 0 40px var(--neon-glow), 0 0 60px var(--neon-glow-secondary), 0 0 90px var(--accent-secondary), 0 0 150px var(--accent-secondary); }
+        100% { text-shadow: 0 0 8px var(--accent), 0 0 18px var(--accent), 0 0 35px var(--neon-glow), 0 0 55px var(--neon-glow), 0 0 80px var(--accent-secondary), 0 0 120px var(--accent-secondary); }
+    }
 
-    header{position:relative;z-index:100;height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:var(--surface);backdrop-filter:blur(18px);border-bottom:1px solid var(--accent);box-shadow: 0 3px 25px rgba(0,0,0,0.5), 0 0 12px var(--neon-glow) inset;}
-    header h2{font-size:1.6rem;color:var(--accent);text-shadow:0 0 4px var(--neon-glow); letter-spacing: 1.5px;}
-    .controls{display:flex;gap:1rem;}
-    .btn{position:relative;z-index:10;background:rgba(12, 15, 30, 0.6);color:var(--accent);border:1px solid var(--accent);padding:0.75rem 1.5rem;border-radius:5px;font-size:0.8rem;text-transform:uppercase;cursor:pointer;overflow:hidden;transition:all var(--transition);box-shadow:0 0 6px rgba(0,234,255,0.25), inset 0 0 10px rgba(0,0,0,0.4);margin:0.2rem; letter-spacing: 1.8px; font-weight: 500;}
-    .btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(100deg, transparent, rgba(0,234,255,0.7), transparent);transition:left 0.7s ease;z-index:0;} /* z-index was -1 */
-    .btn span { position: relative; z-index: 1; } /* Ensure text is above ::before */
-    .btn:hover{color:var(--bg-dark); background-color: var(--accent); box-shadow:0 0 14px var(--neon-glow), 0 0 22px var(--accent), inset 0 0 6px rgba(0,0,0,0.3); transform: translateY(-3px) scale(1.02);}
-    .btn:hover::before{left:100%;}
-    .btn.active { background-color: var(--accent); color: var(--bg-dark); box-shadow:0 0 14px var(--neon-glow), 0 0 22px var(--accent); border-color: var(--accent-secondary); transform: translateY(-1px) scale(1.01);}
-    .btn#deleteBtn { border-color: var(--danger-color); color: var(--danger-color); box-shadow:0 0 6px rgba(255,59,111,0.35), inset 0 0 10px rgba(0,0,0,0.4);}
-    .btn#deleteBtn:hover { background-color: var(--danger-color); color: #fff; box-shadow:0 0 14px var(--danger-color), 0 0 22px var(--danger-color);}
+    #enterBtn { margin-top: 3.5rem; animation: pulseButton 1.8s infinite ease-in-out; font-size: 1.05rem; padding: 1rem 2.2rem;} /* Enhanced pulse */
+
+    header{position:relative;z-index:100;height:75px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:var(--surface);backdrop-filter:blur(22px);border-bottom:2px solid var(--accent);box-shadow: 0 5px 35px rgba(0,0,0,0.65), 0 0 18px var(--neon-glow) inset; animation: headerGlow 4.5s infinite alternate;}
+    @keyframes headerGlow {
+        0% { border-bottom-color: var(--accent); box-shadow: 0 5px 35px rgba(0,0,0,0.65), 0 0 18px var(--neon-glow) inset; }
+        100% { border-bottom-color: var(--accent-secondary); box-shadow: 0 5px 35px rgba(0,0,0,0.7), 0 0 18px var(--neon-glow-secondary) inset; }
+    }
+    header h2{font-size:1.9rem;color:var(--accent);text-shadow:0 0 6px var(--neon-glow); letter-spacing: 2px; animation: titleColorShift 7s infinite alternate;}
+    @keyframes titleColorShift {
+        0% { color: var(--accent); text-shadow:0 0 6px var(--neon-glow); }
+        50% { color: var(--accent-secondary); text-shadow:0 0 6px var(--neon-glow-secondary); }
+        100% { color: var(--accent); text-shadow:0 0 6px var(--neon-glow); }
+    }
+    .controls{display:flex;gap:1.5rem;} /* Increased gap */
+    .btn{
+        position:relative;z-index:10;background:rgba(8, 10, 22, 0.75);color:var(--accent);
+        border:2px solid var(--accent);padding:0.85rem 1.7rem;border-radius:8px; /* Slightly larger border radius */
+        font-size:0.88rem;text-transform:uppercase;cursor:pointer;overflow:hidden;
+        transition:all var(--transition);
+        box-shadow:0 0 10px rgba(0,248,255,0.35), inset 0 0 15px rgba(0,0,0,0.55);
+        margin:0.2rem; letter-spacing: 2.2px; font-weight: 500;
+        transform-style: preserve-3d; /* For 3D hover effect */
+    }
+    .btn::before{ /* Enhanced shine effect */
+        content:'';position:absolute;top:-10%;left:-110%;width:80%;height:120%;
+        background:linear-gradient(60deg, transparent, rgba(255,255,255,0.2), rgba(0,248,255,0.7), rgba(255,255,255,0.2), transparent);
+        transition:left 0.9s cubic-bezier(0.23, 1, 0.32, 1);transform: skewX(-25deg); z-index:0;
+    }
+    .btn span { position: relative; z-index: 1; }
+    /* Enhanced button hover effect */
+    .btn:hover{
+        color:var(--bg-dark); background-color: var(--accent);
+        box-shadow:0 0 18px var(--neon-glow), 0 0 30px var(--accent), inset 0 0 10px rgba(0,0,0,0.45), 0 0 40px var(--accent); /* More glow */
+        transform: translateY(-5px) scale(1.05) perspective(1000px) rotateX(5deg); /* 3D tilt */
+        animation: buttonHoverShine 1.2s infinite alternate; /* Alternate shine */
+    }
+    @keyframes buttonHoverShine {
+        0% { filter: brightness(1.05) saturate(1.1); }
+        100% { filter: brightness(1.4) saturate(1.3); }
+    }
+    .btn:hover::before{left:130%;}
+    .btn.active { background-color: var(--accent); color: var(--bg-dark); box-shadow:0 0 18px var(--neon-glow), 0 0 30px var(--accent); border-color: var(--accent-secondary); transform: translateY(-3px) scale(1.03);}
+    .btn#deleteBtn { border-color: var(--danger-color); color: var(--danger-color); box-shadow:0 0 10px rgba(255,59,111,0.45), inset 0 0 15px rgba(0,0,0,0.55);}
+    .btn#deleteBtn:hover { background-color: var(--danger-color); color: #fff; box-shadow:0 0 18px var(--danger-color), 0 0 30px var(--danger-color);}
 
     #app{display:none;flex-direction:column;height:100%;position:relative; z-index: 1;}
-    .view{flex:1;position:relative;display:none;overflow:hidden; padding: 0.75rem;}
-    .view.active{display:flex; flex-direction: column; animation: fadeInView 0.6s ease-out;}
+    .view{flex:1;position:relative;display:none;overflow:hidden; padding: 1.2rem;} /* Increased padding */
+    .view.active{display:flex; flex-direction: column; animation: fadeInView 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;} /* Smoother, more pronounced fade in */
+    /* Enhanced view transition */
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
 
     #editor-view { padding: 0; }
-    #editor-toolbar{position:absolute;top:12px;right:1.5rem;display:flex;gap:0.75rem;z-index:10;}
-    #editor-container{border:1px solid var(--accent); margin-top: 50px; height: calc(100% - 110px) !important; box-shadow: 0 0 18px var(--neon-glow) inset, 0 0 10px rgba(0,0,0,0.3);}
+    #editor-toolbar{position:absolute;top:18px;right:2.2rem;display:flex;gap:1.2rem;z-index:10;}
+    #editor-container{border:2px solid var(--accent); margin-top: 65px; height: calc(100% - 130px) !important; box-shadow: 0 0 25px var(--neon-glow) inset, 0 0 15px rgba(0,0,0,0.45); animation: editorGlow 5.5s infinite alternate;}
+    @keyframes editorGlow {
+        0% { border-color: var(--accent); box-shadow: 0 0 25px var(--neon-glow) inset, 0 0 15px rgba(0,0,0,0.45); }
+        100% { border-color: var(--accent-secondary); box-shadow: 0 0 25px var(--neon-glow-secondary) inset, 0 0 15px rgba(0,0,0,0.5); }
+    }
 
-    #creator-view { flex-direction: row; gap: 0.75rem; }
-    #creator-sidebar{width:320px; height:100%; background:var(--surface);backdrop-filter:blur(12px);padding:1.25rem;overflow-y:auto;z-index: 5; border-right: 1px solid var(--accent-secondary); box-shadow: 6px 0 20px rgba(0,0,0,0.35); border-radius: 8px 0 0 8px;}
-    #creator-content{flex:1; height:100%; border:1px solid var(--accent);background:transparent; overflow:auto; user-select: none; position:relative; box-shadow: 0 0 18px var(--neon-glow) inset, 0 0 10px rgba(0,0,0,0.3); transition: background 0.5s ease; border-radius: 0 8px 8px 0;}
+    #creator-view { flex-direction: row; gap: 1.2rem; }
+    #creator-sidebar{width:360px; height:100%; background:var(--surface);backdrop-filter:blur(18px);padding:1.8rem;overflow-y:auto;z-index: 5; border-right: 2px solid var(--accent-secondary); box-shadow: 10px 0 30px rgba(0,0,0,0.45); border-radius: 12px 0 0 12px; animation: sidebarSlideIn 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;} /* Smoother slide in */
+    @keyframes sidebarSlideIn { from { transform: translateX(-100%) rotateY(-15deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
+
+    #creator-content{flex:1; height:100%; border:2px solid var(--accent);background:transparent; overflow:auto; user-select: none; position:relative; box-shadow: 0 0 25px var(--neon-glow) inset, 0 0 15px rgba(0,0,0,0.45); transition: background-color 0.35s ease, background-image 0.35s ease; border-radius: 0 12px 12px 0; animation: contentGlow 6.5s infinite alternate;}
+     @keyframes contentGlow {
+        0% { border-color: var(--accent); box-shadow: 0 0 25px var(--neon-glow) inset, 0 0 15px rgba(0,0,0,0.45); }
+        100% { border-color: var(--accent-secondary); box-shadow: 0 0 25px var(--neon-glow-secondary) inset, 0 0 15px rgba(0,0,0,0.5); }
+    }
 
     .editable-element{
-      cursor:grab; padding:0.5rem; border:1px dashed var(--accent);
-      position:absolute; background-color: rgba(0,234,255,0.04);
-      min-width: 35px; min-height: 20px;
-      box-shadow: 0 0 4px rgba(0,234,255,0.15);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border 0.15s ease;
-      border-radius: 3px; /* Default border radius */
+      cursor:grab; padding:0.6rem; border:2px dashed var(--accent);
+      position:absolute; background-color: rgba(0,248,255,0.06);
+      min-width: 45px; min-height: 30px;
+      box-shadow: 0 0 6px rgba(0,248,255,0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
+      border-radius: 5px;
     }
-    .editable-element:active { cursor: grabbing; transform: scale(0.98); }
+    .editable-element:active { cursor: grabbing; transform: scale(0.96); box-shadow: 0 0 15px rgba(0,248,255,0.4); }
+    /* Enhanced selected element style */
     .editable-element.selected{
-      border:1.5px solid var(--handle-color);
-      box-shadow: 0 0 10px var(--handle-color), 0 0 4px var(--handle-color) inset;
-      outline: 1.5px solid rgba(var(--handle-color), 0.5);
+      border:2.5px solid var(--handle-color);
+      box-shadow: 0 0 15px var(--handle-color), 0 0 8px var(--handle-color) inset, 0 0 25px var(--accent); /* Added accent glow */
+      outline: 2.5px solid rgba(var(--handle-color), 0.65);
+      animation: pulseSelectedElement 1.5s infinite ease-in-out; /* Pulsing animation for selected */
     }
+    @keyframes pulseSelectedElement {
+        0%, 100% { box-shadow: 0 0 15px var(--handle-color), 0 0 8px var(--handle-color) inset, 0 0 25px var(--accent); transform: scale(1); }
+        50% { box-shadow: 0 0 20px var(--handle-color), 0 0 10px var(--handle-color) inset, 0 0 35px var(--accent), 0 0 10px var(--accent-secondary); transform: scale(1.01); }
+    }
+
     .resize-handle {
-      position: absolute; width: 11px; height: 11px;
+      position: absolute; width: 14px; height: 14px; /* Slightly larger handles */
       background-color: var(--handle-color);
-      border: 1.5px solid rgba(0,0,0,0.6);
-      border-radius: 3px;
-      z-index: 100; box-shadow: 0 0 4px var(--handle-color);
-      transition: transform 0.15s ease, background-color 0.15s ease;
+      border: 2.5px solid rgba(0,0,0,0.75);
+      border-radius: 5px;
+      z-index: 100; box-shadow: 0 0 6px var(--handle-color);
+      transition: transform 0.2s ease, background-color 0.2s ease;
     }
-    .resize-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
-    .resize-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
-    .resize-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
-    .resize-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
-    .resize-handle.n { top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
-    .resize-handle.s { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
-    .resize-handle.w { left: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
-    .resize-handle.e { right: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+    .resize-handle.nw { top: -7px; left: -7px; cursor: nwse-resize; }
+    .resize-handle.ne { top: -7px; right: -7px; cursor: nesw-resize; }
+    .resize-handle.sw { bottom: -7px; left: -7px; cursor: nesw-resize; }
+    .resize-handle.se { bottom: -7px; right: -7px; cursor: nwse-resize; }
+    .resize-handle.n { top: -7px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+    .resize-handle.s { bottom: -7px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+    .resize-handle.w { left: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
+    .resize-handle.e { right: -7px; top: 50%; transform: translateY(-50%); cursor: ew-resize; }
 
-    .resize-handle:hover { transform: scale(1.35); background-color: var(--accent); border-color: var(--bg-dark); }
-    .resize-handle.n:hover, .resize-handle.s:hover { transform: translateX(-50%) scale(1.35); }
-    .resize-handle.w:hover, .resize-handle.e:hover { transform: translateY(-50%) scale(1.35); }
+    .resize-handle:hover { transform: scale(1.5); background-color: var(--accent); border-color: var(--bg-dark); box-shadow: 0 0 8px var(--accent); }
+    .resize-handle.n:hover, .resize-handle.s:hover { transform: translateX(-50%) scale(1.5); }
+    .resize-handle.w:hover, .resize-handle.e:hover { transform: translateY(-50%) scale(1.5); }
 
+    /* Enhanced sidebar section */
+    .sidebar-section {
+        margin-bottom: 2.2rem; padding: 1.8rem; border: 1.5px solid rgba(0,248,255,0.25);
+        border-radius: 12px; background-color: rgba(0,0,0,0.25);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 0 6px rgba(0,0,0,0.15);
+        transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+    }
+    .sidebar-section:hover {
+        box-shadow: 0 6px 18px rgba(0,248,255,0.15), inset 0 0 10px rgba(0,248,255,0.08);
+        transform: translateY(-3px) scale(1.01); /* Lift and slightly scale */
+        border-color: rgba(0,248,255,0.4);
+    }
+    .sidebar-section h3 {
+        color: var(--accent); margin-top:0; margin-bottom: 1.8rem; font-size: 1.25rem;
+        text-shadow: 0 0 5px var(--neon-glow); border-bottom: 1.5px solid rgba(0,248,255,0.35);
+        padding-bottom: 0.9rem; letter-spacing: 1.3px;
+        animation: pulseAccentText 3s infinite alternate; /* Subtle pulse for section titles */
+    }
+    @keyframes pulseAccentText {
+        0% { color: var(--accent); text-shadow: 0 0 5px var(--neon-glow); }
+        100% { color: var(--accent-secondary); text-shadow: 0 0 5px var(--neon-glow-secondary); }
+    }
 
-    .sidebar-section { margin-bottom: 1.8rem; padding: 1.25rem; border: 1px solid rgba(0,234,255,0.15); border-radius: 8px; background-color: rgba(0,0,0,0.15); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    .sidebar-section h3 { color: var(--accent); margin-top:0; margin-bottom: 1.25rem; font-size: 1.1rem; text-shadow: 0 0 3px var(--neon-glow); border-bottom: 1px solid rgba(0,234,255,0.25); padding-bottom: 0.75rem; letter-spacing: 1px;}
-    .sidebar-section label { display: block; margin-bottom: 0.5rem; font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500;}
+    .sidebar-section label { display: block; margin-bottom: 0.7rem; font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.1px; font-weight: 500;}
+
+    .input-slider-group { display: flex; align-items: center; gap: 12px; margin-bottom: 1.1rem; }
+    .input-slider-group input[type="text"], .input-slider-group input[type="number"] { flex-grow: 1; margin-bottom: 0; }
+    .input-slider-group input[type="range"] { flex-grow: 2; margin-bottom: 0; }
+    .shadow-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-items: center; }
+    .shadow-grid label { margin-bottom: 0.35rem; }
+    .shadow-grid .color-input-label { grid-column: 1 / -1; margin-top: 0.6rem;}
+    .shadow-grid input[type="color"] { grid-column: 1 / -1; width: calc(100% - 18px); }
+    .shadow-grid .checkbox-label-inline { display: flex; align-items: center; grid-column: 1 / -1; margin-top: 0.6rem;}
+    .shadow-grid .checkbox-label-inline input[type="checkbox"] { margin-right: 9px; }
+    .shadow-grid .checkbox-label-inline label { margin-bottom: 0; text-transform: none; font-size: 0.88rem; }
+
+    /* Enhanced input styles */
     .sidebar-section input[type="text"],
-    .sidebar-section input[type="number"], /* Added number type */
+    .sidebar-section input[type="number"],
     .sidebar-section input[type="color"],
     .sidebar-section select {
-        width: calc(100% - 16px); padding: 0.7rem; margin-bottom: 1rem;
-        background-color: rgba(0,0,0,0.5); border: 1px solid var(--accent-secondary);
-        color: var(--text); border-radius: 5px;
+        width: calc(100% - 18px); padding: 0.8rem; margin-bottom: 1.1rem;
+        background-color: rgba(0,0,0,0.65); border: 2px solid var(--accent-secondary);
+        color: var(--text); border-radius: 7px;
         transition: box-shadow var(--transition), border-color var(--transition), background-color var(--transition);
-        font-family: var(--font-mono); font-size: 0.9rem;
+        font-family: var(--font-mono); font-size: 0.92rem;
     }
-    .sidebar-section input[type="range"] { /* Opacity Slider */
-        width: calc(100% - 16px); margin-bottom: 1rem; -webkit-appearance: none; appearance: none; height: 8px; background: rgba(0,0,0,0.5); border-radius: 5px; border: 1px solid var(--accent-secondary); cursor: pointer;
+    .sidebar-section input[type="range"] {
+        width: 100%; margin-bottom: 1.1rem; -webkit-appearance: none; appearance: none; height: 12px; background: rgba(0,0,0,0.65); border-radius: 6px; border: 2px solid var(--accent-secondary); cursor: pointer;
+        transition: box-shadow var(--transition), border-color var(--transition);
     }
-    .sidebar-section input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-dark); box-shadow: 0 0 5px var(--neon-glow); cursor: pointer; }
-    .sidebar-section input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-dark); box-shadow: 0 0 5px var(--neon-glow); cursor: pointer; }
+    .sidebar-section input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; background: var(--accent); border-radius: 50%; border: 3px solid var(--bg-dark); box-shadow: 0 0 7px var(--neon-glow); cursor: pointer; transition: transform 0.18s ease, background-color 0.18s ease;}
+    .sidebar-section input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; border: 3px solid var(--bg-dark); box-shadow: 0 0 7px var(--neon-glow); cursor: pointer; transition: transform 0.18s ease, background-color 0.18s ease;}
+    .sidebar-section input[type="range"]:hover::-webkit-slider-thumb { background-color: var(--accent-secondary); transform: scale(1.15); box-shadow: 0 0 9px var(--neon-glow-secondary); }
+    .sidebar-section input[type="range"]:hover::-moz-range-thumb { background-color: var(--accent-secondary); transform: scale(1.15); box-shadow: 0 0 9px var(--neon-glow-secondary); }
 
-    .sidebar-section input[type="text"]::placeholder { color: #5c6880; }
+
+    .sidebar-section input[type="text"]::placeholder { color: #7a88a0; }
     .sidebar-section input:focus, .sidebar-section select:focus, .sidebar-section input[type="range"]:focus {
-        border-color: var(--accent); box-shadow: 0 0 12px var(--neon-glow); outline: none; background-color: rgba(0,10,20,0.6);
+        border-color: var(--accent); box-shadow: 0 0 16px var(--neon-glow), 0 0 5px var(--accent) inset; outline: none; background-color: rgba(0,12,24,0.75);
     }
-    .sidebar-section input[type="color"] { height: 42px; padding: 0.25rem; cursor: pointer; }
+    .sidebar-section input[type="color"] { height: 48px; padding: 0.35rem; cursor: pointer; }
     .sidebar-section input[type="checkbox"] {
-        appearance: none; width: 17px; height: 17px; border: 2px solid var(--accent); border-radius: 4px;
-        display: inline-block; vertical-align: middle; position: relative; cursor: pointer; margin-right: 10px;
-        transition: background-color var(--transition), box-shadow var(--transition);
+        appearance: none; width: 20px; height: 20px; border: 3px solid var(--accent); border-radius: 6px;
+        display: inline-block; vertical-align: middle; position: relative; cursor: pointer; margin-right: 12px;
+        transition: background-color var(--transition), box-shadow var(--transition), transform 0.2s ease;
     }
-    .sidebar-section input[type="checkbox"]:checked { background-color: var(--accent); box-shadow: 0 0 6px var(--neon-glow); }
+    .sidebar-section input[type="checkbox"]:checked { background-color: var(--accent); box-shadow: 0 0 8px var(--neon-glow); transform: scale(1.1); }
     .sidebar-section input[type="checkbox"]:checked::before {
-        content: ''; width: 7px; height: 3px; border-left: 2px solid var(--bg-dark); border-bottom: 2px solid var(--bg-dark);
+        content: ''; width: 9px; height: 5px; border-left: 3px solid var(--bg-dark); border-bottom: 3px solid var(--bg-dark);
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%) rotate(-45deg);
     }
-     .sidebar-section .btn { width: 100%; margin-bottom: 0.6rem; padding: 0.85rem; font-size: 0.8rem; }
+     .sidebar-section .btn { width: 100%; margin-bottom: 0.8rem; padding: 0.95rem; font-size: 0.88rem; }
 
     #bottom-toolbar{
-      position:absolute; bottom:0; left:320px;
-      right:0; padding:0.8rem; display:flex; justify-content: center; gap:1.25rem; z-index:10;
-      background: var(--surface); border-top: 1px solid var(--accent-secondary);
-      box-shadow: 0 -3px 15px rgba(0,0,0,0.4);
+      position:absolute; bottom:0; left:360px; /* Adjusted for sidebar width */
+      right:0; padding:1.2rem; display:flex; justify-content: center; gap:1.8rem; z-index:10;
+      background: var(--surface); border-top: 2px solid var(--accent-secondary);
+      box-shadow: 0 -5px 25px rgba(0,0,0,0.55);
+      animation: bottomToolbarSlideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.35s backwards;
     }
+    @keyframes bottomToolbarSlideUp { from { transform: translateY(100%) scaleY(0.8); opacity: 0; } to { transform: translateY(0) scaleY(1); opacity: 1; } }
 
-    /* New Animated Backgrounds */
-    .pattern-digital-rain {
-        background-color: #03070f;
-        overflow: hidden; /* Important for canvas based effects if any */
-    }
-    .pattern-hexagonal-mesh {
-        --hex-color: rgba(0, 234, 255, 0.08);
-        --hex-size: 30px;
-        background-image:
-            linear-gradient(30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)),
-            linear-gradient(-30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)),
-            linear-gradient(90deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size));
-        background-size: calc(var(--hex-size) * 1.732) var(--hex-size); /* sqrt(3) * size, size */
-        animation: moveHexMesh 20s linear infinite;
-    }
-    @keyframes moveHexMesh {
-        0% { background-position: 0 0; }
-        100% { background-position: calc(var(--hex-size) * 1.732 * 2) calc(var(--hex-size) * 2); }
-    }
-     /* Added/Corrected CSS Animations for existing patterns */
+
+    /* --- Animated Background Patterns --- */
+    /* Base styles for patterns, ensuring they use the new --bg-dark */
+    .pattern-digital-rain { background-color: #010205; overflow: hidden; } /* Darker for rain */
+    .pattern-warp-speed { background-color: #000103; } /* Darker for warp */
+
     .pattern-animated-grid {
-        background-image: linear-gradient(rgba(0,234,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,234,255,0.07) 1px, transparent 1px);
-        background-size: 25px 25px;
-        animation: moveGrid 8s linear infinite;
+        background-color: var(--bg-dark);
+        background-image: linear-gradient(rgba(0,248,255,0.12) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(0,248,255,0.12) 1.5px, transparent 1.5px);
+        background-size: 38px 38px;
+        animation: moveGrid 5.5s linear infinite, pulseGridLines 4.5s ease-in-out infinite alternate;
     }
-    @keyframes moveGrid {
-        0% { background-position: 0 0; }
-        100% { background-position: 25px 25px; }
-    }
+    @keyframes moveGrid { 0% { background-position: 0 0; } 100% { background-position: 76px 38px; } }
+    @keyframes pulseGridLines { 0% { opacity: 0.6; filter: brightness(0.9); } 100% { opacity: 1; filter: brightness(1.1); } }
+
+
     .pattern-animated-dots {
-        background-image: radial-gradient(rgba(0,234,255,0.15) 1px, transparent 1px);
-        background-size: 18px 18px;
-        animation: pulseDots 4s ease-in-out infinite alternate;
+        background-color: var(--bg-dark);
+        background-image: radial-gradient(rgba(0,248,255,0.25) 1.5px, transparent 1.5px);
+        background-size: 24px 24px;
+        animation: pulseDots 2.8s ease-in-out infinite alternate, shimmerDots 7.5s linear infinite;
     }
-    @keyframes pulseDots {
-        0% { background-size: 18px 18px; opacity: 0.6; }
-        100% { background-size: 22px 22px; opacity: 1; }
+    @keyframes pulseDots { 0% { background-size: 24px 24px; opacity: 0.35; } 100% { background-size: 28px 28px; opacity: 1; } }
+    @keyframes shimmerDots {
+      0%, 100% { filter: brightness(0.85) saturate(0.75); }
+      50% { filter: brightness(1.25) saturate(1.25); }
     }
+
     .pattern-animated-lines {
+        background-color: var(--bg-dark);
         background: repeating-linear-gradient(
-            60deg,
-            rgba(0,234,255,0.03),
-            rgba(0,234,255,0.03) 8px,
-            rgba(0,234,255,0.06) 8px,
-            rgba(0,234,255,0.06) 16px
+            55deg,
+            rgba(0,248,255,0.035), rgba(0,248,255,0.035) 12px,
+            rgba(208,0,255,0.055) 12px, rgba(208,0,255,0.055) 24px
         );
-        background-size: 150% 150%;
-        animation: moveLines 10s linear infinite;
+        background-size: 220% 220%;
+        animation: moveLines 7.5s linear infinite, lineBrightness 5.5s ease-in-out infinite alternate;
     }
-    @keyframes moveLines {
-        0% { background-position: 0% 0%; }
-        100% { background-position: 100% 100%; }
+    @keyframes moveLines { 0% { background-position: 0% 0%; } 100% { background-position: 220% 220%; } }
+    @keyframes lineBrightness { 0% { opacity: 0.55; } 100% { opacity: 1; } }
+
+
+    .pattern-hexagonal-mesh {
+        background-color: var(--bg-dark);
+        --hex-color-main: rgba(0, 248, 255, 0.14);
+        --hex-color-pulse: rgba(208, 0, 255, 0.17);
+        --hex-size: 42px;
+        background-image:
+            linear-gradient(30deg, transparent calc(var(--hex-size)/2), var(--hex-color-main) calc(var(--hex-size)/2), var(--hex-color-main) var(--hex-size), transparent var(--hex-size)),
+            linear-gradient(-30deg, transparent calc(var(--hex-size)/2), var(--hex-color-main) calc(var(--hex-size)/2), var(--hex-color-main) var(--hex-size), transparent var(--hex-size)),
+            linear-gradient(90deg, transparent calc(var(--hex-size)/2), var(--hex-color-main) calc(var(--hex-size)/2), var(--hex-color-main) var(--hex-size), transparent var(--hex-size));
+        background-size: calc(var(--hex-size) * 1.732) var(--hex-size);
+        animation: moveHexMesh 14s linear infinite, pulseHexOpacity 6.5s ease-in-out infinite alternate;
+    }
+    @keyframes moveHexMesh { 0% { background-position: 0 0; } 100% { background-position: calc(var(--hex-size) * 1.732 * 2) calc(var(--hex-size) * 2); } }
+     @keyframes pulseHexOpacity {
+        0% { opacity: 0.55; filter: brightness(0.75); }
+        100% { opacity: 1; filter: brightness(1.15); }
     }
 
 
-    .pattern-warp-speed {
-        background-color: #03050a;
-        /* JS will handle canvas for this one */
+    .pattern-cosmic-pulse {
+        background-color: #010207; /* Darker cosmic background */
+        position: relative; overflow: hidden;
     }
+    .pattern-cosmic-pulse::before {
+        content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-image:
+            radial-gradient(circle at 20% 30%, rgba(0, 248, 255, 0.35) 0px, transparent 1.1px),
+            radial-gradient(circle at 80% 70%, rgba(208, 0, 255, 0.3) 0px, transparent 1.1px),
+            radial-gradient(circle at 50% 50%, rgba(230, 240, 255, 0.22) 0px, transparent 0.9px),
+            radial-gradient(circle at 30% 80%, rgba(0, 248, 255, 0.22) 0px, transparent 1.3px),
+            radial-gradient(circle at 70% 20%, rgba(208, 0, 255, 0.18) 0px, transparent 0.8px);
+        background-size: 2.2px 2.2px, 2.2px 2.2px, 1.8px 1.8px, 2.6px 2.6px, 1.6px 1.6px;
+        background-position: 0 0, 100px 150px, 200px 50px, 50px 250px, 250px 200px;
+        animation: cosmicPulseStars 9s linear infinite, cosmicPulseOpacity 5.5s ease-in-out infinite alternate;
+    }
+    @keyframes cosmicPulseStars {
+        0% { background-position: 0 0, 100px 150px, 200px 50px, 50px 250px, 250px 200px; }
+        100% { background-position: -220px -160px, -110px 0px, 0px 260px, 260px 50px, 50px 410px; }
+    }
+    @keyframes cosmicPulseOpacity {
+        0% { opacity: 0.45; filter: brightness(0.65) saturate(0.55); }
+        50% { opacity: 1; filter: brightness(1.35) saturate(1.35); }
+        100% { opacity: 0.45; filter: brightness(0.65) saturate(0.55); }
+    }
+
+    .pattern-techno-circuit {
+        background-color: #03050a; /* Darker circuit background */
+        background-image:
+            linear-gradient(rgba(0,248,255,0.08) 1.1px, transparent 1.1px),
+            linear-gradient(90deg, rgba(0,248,255,0.08) 1.1px, transparent 1.1px),
+            linear-gradient(45deg, rgba(208,0,255,0.06) 1.1px, transparent 1.1px),
+            linear-gradient(-45deg, rgba(208,0,255,0.06) 1.1px, transparent 1.1px);
+        background-size: 42px 42px, 42px 42px, 64px 64px, 64px 64px;
+        animation: moveCircuitGrid 11s linear infinite, pulseCircuitGlow 3.8s ease-in-out infinite alternate;
+    }
+    @keyframes moveCircuitGrid {
+        0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+        100% { background-position: 84px 42px, 42px 84px, 128px 128px, -128px -128px; }
+    }
+    @keyframes pulseCircuitGlow {
+        0% { filter: brightness(0.75) saturate(0.65); }
+        100% { filter: brightness(1.25) saturate(1.15); }
+    }
+
+    .pattern-aurora-borealis {
+        background: linear-gradient(
+            -50deg, /* Slightly different angle */
+            rgba(4, 8, 22, 0.92), /* Darker base */
+            rgba(0, 248, 255, 0.32),
+            rgba(208, 0, 255, 0.38),
+            rgba(0, 110, 160, 0.28),
+            rgba(4, 8, 22, 0.92)
+        );
+        background-size: 450% 450%; /* Larger size for smoother flow */
+        animation: auroraFlow 18s ease infinite; /* Faster flow */
+    }
+    @keyframes auroraFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient-background {
+        background-size: 280% 280% !important; /* Larger for smoother animation */
+        animation: gradientAnimation 11s ease infinite alternate;
+        background-image: linear-gradient(var(--gradient-direction, to right), var(--gradient-color-1, #c000ff), var(--gradient-color-2, #00f0ff)) !important;
+    }
+    @keyframes gradientAnimation {
+        0% { background-position: 0% 50%; filter: saturate(1.1) brightness(1.05); } /* Added subtle filter animation */
+        100% { background-position: 100% 50%; filter: saturate(1.3) brightness(1.15); }
+    }
+
 
     label[for="gradientPicker"], #gradientPicker { display: none; }
 
-    ::-webkit-scrollbar { width: 9px; height: 9px; }
-    ::-webkit-scrollbar-track { background: var(--bg-medium); border-radius: 10px; border: 1px solid rgba(0,0,0,0.2);}
-    ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 10px; border: 1px solid rgba(0,0,0,0.5);}
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent); box-shadow: 0 0 5px var(--neon-glow);}
+    ::-webkit-scrollbar { width: 12px; height: 12px; } /* Slightly wider */
+    ::-webkit-scrollbar-track { background: var(--bg-medium); border-radius: 12px; border: 1.5px solid rgba(0,0,0,0.35);}
+    ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 12px; border: 2px solid rgba(0,0,0,0.65); transition: background-color var(--transition), box-shadow var(--transition);}
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); box-shadow: 0 0 8px var(--neon-glow), 0 0 4px var(--accent) inset;} /* Added inset glow */
 
-    /* Canvas for Digital Rain / Warp Speed */
     #dynamicBgCanvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events: none;}
+
+    /* Enhanced Custom Alert Box */
+    #customAlertBox {
+        position: fixed; top: -200px; /* Start further off-screen */
+        left: 50%; transform: translateX(-50%);
+        padding: 22px 40px; background-color: var(--surface); backdrop-filter: blur(12px);
+        color: var(--text); border: 2.5px solid var(--accent); border-radius: 12px;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.75), 0 0 10px rgba(0,0,0,0.3) inset; /* Enhanced shadow */
+        z-index: 2000;
+        font-family: var(--font-main); font-size: 1.1rem; letter-spacing: 1.2px;
+        opacity: 0;
+        transition: opacity 0.6s ease, top 0.6s cubic-bezier(0.68, -0.6, 0.32, 1.6); /* Smoother, bouncier transition */
+        text-align: center; min-width: 380px; max-width: 90%;
+    }
+
+    /* Styles for structural divs */
+    .structural-div {
+        position: absolute;
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        border: 1px dashed rgba(255, 255, 255, 0.3); /* Subtle border to show boundaries */
+        overflow: hidden; /* Hide overflowing elements within the section */
+    }
+
+    #header-div {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px; /* Example height */
+        background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+        padding: 10px 20px; /* Add some padding */
+    }
+
+    #content-div {
+        top: 80px; /* Below header */
+        left: 0;
+        width: 100%;
+        bottom: 60px; /* Above footer */
+        background-color: rgba(0, 0, 0, 0.1); /* Lighter semi-transparent background */
+        padding: 20px; /* Add some padding */
+        overflow: auto; /* Allow scrolling if content overflows */
+    }
+
+     #footer-div {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px; /* Example height */
+        background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+        padding: 10px 20px; /* Add some padding */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center content */
+    }
 
   </style>
 </head>
@@ -286,15 +530,16 @@
         <div class="sidebar-section">
             <h3>Стиль Холста</h3>
             <label for="solidColorPicker">Цвет заливки:</label>
-            <input type="color" id="solidColorPicker" value="#06070f" />
-
-            <label for="patternPicker">Анимированные текстуры:</label>
+            <input type="color" id="solidColorPicker" value="#05060a" /> <label for="patternPicker">Анимированные текстуры:</label>
             <select id="patternPicker">
               <option value="none">Отключено</option>
               <option value="pattern-animated-grid">Кибер-сетка</option>
               <option value="pattern-animated-dots">Пульсар</option>
               <option value="pattern-animated-lines">Энерго-линии</option>
               <option value="pattern-hexagonal-mesh">Гексагональная Сеть</option>
+              <option value="pattern-cosmic-pulse">Космический Пульс</option>
+              <option value="pattern-techno-circuit">Техно-Схема</option>
+              <option value="pattern-aurora-borealis">Северное Сияние</option>
               <option value="pattern-digital-rain">Цифровой Дождь (Matrix)</option>
               <option value="pattern-warp-speed">Варп-Скорость</option>
             </select>
@@ -302,10 +547,8 @@
         <div class="sidebar-section">
             <h3>Градиентный Фон</h3>
             <label for="gradientColor1">Цвет начала:</label>
-            <input type="color" id="gradientColor1" value="#aa00ff">
-            <label for="gradientColor2">Цвет конца:</label>
-            <input type="color" id="gradientColor2" value="#00eaff">
-            <label for="gradientDirection">Направление потока:</label>
+            <input type="color" id="gradientColor1" value="#d000ff"> <label for="gradientColor2">Цвет конца:</label>
+            <input type="color" id="gradientColor2" value="#00f8ff"> <label for="gradientDirection">Направление потока:</label>
             <select id="gradientDirection">
               <option value="to right">Вправо &#8594;</option>
               <option value="to left">&#8592; Влево</option>
@@ -319,9 +562,9 @@
             </select>
             <div>
                 <input type="checkbox" id="gradientAnimate">
-                <label for="gradientAnimate" style="display:inline; font-size:0.85rem; text-transform:none; color: var(--text);">Анимировать переход</label>
+                <label for="gradientAnimate" style="display:inline; font-size:0.88rem; text-transform:none; color: var(--text);">Анимировать переход</label>
             </div>
-            <button id="applyGradientBtn" class="btn" style="margin-top: 10px;"><span>Применить Градиент</span></button>
+            <button id="applyGradientBtn" class="btn" style="margin-top: 12px;"><span>Применить Градиент</span></button>
         </div>
 
         <div class="sidebar-section">
@@ -332,10 +575,10 @@
             <button id="addButtonBtn" class="btn"><span>Интерактивная Кнопка</span></button>
             <button id="addImageBtn" class="btn"><span>Графический Объект</span></button>
             <button id="addDivBtn" class="btn"><span>Контейнер (Div)</span></button>
-        </div>
+            <button id="generateRandomBtn" class="btn" style="margin-top: 1.5rem;"><span>Сгенерировать Шаблон</span></button> </div>
          <div class="sidebar-section">
             <h3>Параметры Модуля</h3>
-            <label for="elementOpacity">Прозрачность:</label>
+            <label for="elementOpacity">Прозрачность (<span id="elementOpacityValue">1</span>):</label>
             <input type="range" id="elementOpacity" min="0" max="1" step="0.01" value="1">
 
             <label for="elementFontFamily">Шрифт текста:</label>
@@ -351,22 +594,51 @@
                 <option value="Georgia, serif">Georgia (с засечками)</option>
                 <option value="'Comic Sans MS', cursive">Comic Sans (креатив)</option>
             </select>
-            <label for="elementFontSize">Размер текста (px, em, %):</label>
-            <input type="text" id="elementFontSize" placeholder="16px">
 
-            <label for="elementWidth">Ширина (px, %, vw):</label>
-            <input type="text" id="elementWidth" placeholder="auto">
-            <label for="elementHeight">Высота (px, %, vh):</label>
-            <input type="text" id="elementHeight" placeholder="auto">
+            <label for="elementFontSize">Размер текста (<span id="elementFontSizeValue">16</span>px):</label>
+            <div class="input-slider-group">
+                <input type="number" id="elementFontSize" placeholder="16" min="1">
+                <input type="range" id="elementFontSizeSlider" min="8" max="120" step="1" value="16">
+            </div>
+            <select id="elementFontSizeUnit">
+                <option value="px">px</option><option value="em">em</option><option value="%">%</option><option value="rem">rem</option><option value="vw">vw</option>
+            </select>
+
+
+            <label for="elementWidth">Ширина (<span id="elementWidthValue">auto</span>):</label>
+            <div class="input-slider-group">
+                <input type="number" id="elementWidth" placeholder="100" min="0">
+                <input type="range" id="elementWidthSlider" min="10" max="1000" step="1" value="100">
+            </div>
+             <select id="elementWidthUnit">
+                <option value="px">px</option><option value="%">%</option><option value="vw">vw</option><option value="auto">auto</option>
+            </select>
+
+            <label for="elementHeight">Высота (<span id="elementHeightValue">auto</span>):</label>
+            <div class="input-slider-group">
+                <input type="number" id="elementHeight" placeholder="50" min="0">
+                <input type="range" id="elementHeightSlider" min="10" max="1000" step="1" value="50">
+            </div>
+            <select id="elementHeightUnit">
+                <option value="px">px</option><option value="%">%</option><option value="vh">vh</option><option value="auto">auto</option>
+            </select>
+
             <label for="elementBgColor">Цвет фона модуля:</label>
-            <input type="color" id="elementBgColor" value="#0e101f">
-            <label for="elementTextColor">Цвет текста модуля:</label>
-            <input type="color" id="elementTextColor" value="#dde4ff">
+            <input type="color" id="elementBgColor" value="#0c0e1a"> <label for="elementTextColor">Цвет текста модуля:</label>
+            <input type="color" id="elementTextColor" value="#e8f0ff"> <label for="elementBorderRadius">Скругление углов (<span id="elementBorderRadiusValue">3</span>px):</label>
+            <div class="input-slider-group">
+                <input type="number" id="elementBorderRadius" placeholder="3" min="0">
+                <input type="range" id="elementBorderRadiusSlider" min="0" max="100" step="1" value="3">
+            </div>
+            <select id="elementBorderRadiusUnit">
+                <option value="px">px</option><option value="%">%</option>
+            </select>
 
-            <label for="elementBorderRadius">Скругление углов (px, %):</label>
-            <input type="text" id="elementBorderRadius" placeholder="3px">
-            <label for="elementBorderWidth">Толщина рамки (px):</label>
-            <input type="text" id="elementBorderWidth" placeholder="1px">
+            <label for="elementBorderWidth">Толщина рамки (<span id="elementBorderWidthValue">1</span>px):</label>
+            <div class="input-slider-group">
+                <input type="number" id="elementBorderWidth" placeholder="1" min="0">
+                <input type="range" id="elementBorderWidthSlider" min="0" max="20" step="1" value="1">
+            </div>
             <label for="elementBorderStyle">Стиль рамки:</label>
             <select id="elementBorderStyle">
                 <option value="none">Нет</option><option value="solid">Сплошная</option><option value="dashed">Пунктир</option>
@@ -374,16 +646,45 @@
                 <option value="ridge">Выступ</option><option value="inset">Вдавленная</option><option value="outset">Выпуклая</option>
             </select>
             <label for="elementBorderColor">Цвет рамки:</label>
-            <input type="color" id="elementBorderColor" value="#00eaff">
+            <input type="color" id="elementBorderColor" value="#00f8ff"> <h4>Тень Блока (Box Shadow)</h4>
+            <div class="shadow-grid">
+                <label for="boxShadowOffsetX">Смещение X (px):</label>
+                <input type="number" id="boxShadowOffsetX" value="0" step="1">
+                <label for="boxShadowOffsetY">Смещение Y (px):</label>
+                <input type="number" id="boxShadowOffsetY" value="0" step="1">
+                <label for="boxShadowBlur">Размытие (px):</label>
+                <input type="number" id="boxShadowBlur" value="0" min="0" step="1">
+                <label for="boxShadowSpread">Растяжение (px):</label>
+                <input type="number" id="boxShadowSpread" value="0" step="1">
+                <label for="boxShadowColor" class="color-input-label">Цвет тени:</label>
+                <input type="color" id="boxShadowColor" value="#000000">
+                 <div class="checkbox-label-inline">
+                    <input type="checkbox" id="boxShadowInset">
+                    <label for="boxShadowInset">Внутренняя тень (Inset)</label>
+                </div>
+            </div>
+            <button id="applyBoxShadowBtn" class="btn" style="margin-top:12px; font-size:0.78rem; padding: 0.65rem 1.1rem;"><span>Применить Тень Блока</span></button>
+            <button id="clearBoxShadowBtn" class="btn" style="font-size:0.78rem; padding: 0.65rem 1.1rem; background: rgba(255,59,111,0.2); border-color: var(--danger-color); color: var(--danger-color);"><span>Сбросить Тень Блока</span></button>
 
-            <label for="elementBoxShadow">Тень блока (CSS):</label>
-            <input type="text" id="elementBoxShadow" placeholder="2px 2px 5px #000">
-            <label for="elementTextShadow">Тень текста (CSS):</label>
-            <input type="text" id="elementTextShadow" placeholder="1px 1px 2px #000">
+
+            <h4>Тень Текста (Text Shadow)</h4>
+             <div class="shadow-grid">
+                <label for="textShadowOffsetX">Смещение X (px):</label>
+                <input type="number" id="textShadowOffsetX" value="0" step="1">
+                <label for="textShadowOffsetY">Смещение Y (px):</label>
+                <input type="number" id="textShadowOffsetY" value="0" step="1">
+                <label for="textShadowBlur">Размытие (px):</label>
+                <input type="number" id="textShadowBlur" value="0" min="0" step="1">
+                <label for="textShadowColor" class="color-input-label">Цвет тени:</label>
+                <input type="color" id="textShadowColor" value="#000000">
+            </div>
+            <button id="applyTextShadowBtn" class="btn" style="margin-top:12px; font-size:0.78rem; padding: 0.65rem 1.1rem;"><span>Применить Тень Текста</span></button>
+            <button id="clearTextShadowBtn" class="btn" style="font-size:0.78rem; padding: 0.65rem 1.1rem; background: rgba(255,59,111,0.2); border-color: var(--danger-color); color: var(--danger-color);"><span>Сбросить Тень Текста</span></button>
         </div>
       </div>
       <div id="creator-content">
-         <canvas id="dynamicBgCanvas"></canvas> </div>
+         <canvas id="dynamicBgCanvas"></canvas>
+         </div>
       <div id="bottom-toolbar">
         <button id="deleteBtn" class="btn"><span>Удалить выбранное</span></button>
         <button id="creatorDownloadBtn" class="btn"><span>Сохранить Композицию</span></button>
@@ -423,21 +724,61 @@
     const addButtonBtn = document.getElementById('addButtonBtn');
     const addImageBtn = document.getElementById('addImageBtn');
     const addDivBtn = document.getElementById('addDivBtn');
+    const generateRandomBtn = document.getElementById('generateRandomBtn'); // New button element
 
     // Element Properties Inputs
     const elementOpacityInput = document.getElementById('elementOpacity');
+    const elementOpacityValue = document.getElementById('elementOpacityValue');
     const elementFontFamilyInput = document.getElementById('elementFontFamily');
+
     const elementFontSizeInput = document.getElementById('elementFontSize');
+    const elementFontSizeSlider = document.getElementById('elementFontSizeSlider');
+    const elementFontSizeValue = document.getElementById('elementFontSizeValue');
+    const elementFontSizeUnit = document.getElementById('elementFontSizeUnit');
+
     const elementWidthInput = document.getElementById('elementWidth');
+    const elementWidthSlider = document.getElementById('elementWidthSlider');
+    const elementWidthValue = document.getElementById('elementWidthValue');
+    const elementWidthUnit = document.getElementById('elementWidthUnit');
+
     const elementHeightInput = document.getElementById('elementHeight');
+    const elementHeightSlider = document.getElementById('elementHeightSlider');
+    const elementHeightValue = document.getElementById('elementHeightValue');
+    const elementHeightUnit = document.getElementById('elementHeightUnit');
+
     const elementBgColorInput = document.getElementById('elementBgColor');
     const elementTextColorInput = document.getElementById('elementTextColor');
+
     const elementBorderRadiusInput = document.getElementById('elementBorderRadius');
+    const elementBorderRadiusSlider = document.getElementById('elementBorderRadiusSlider');
+    const elementBorderRadiusValue = document.getElementById('elementBorderRadiusValue');
+    const elementBorderRadiusUnit = document.getElementById('elementBorderRadiusUnit');
+
     const elementBorderWidthInput = document.getElementById('elementBorderWidth');
+    const elementBorderWidthSlider = document.getElementById('elementBorderWidthSlider');
+    const elementBorderWidthValue = document.getElementById('elementBorderWidthValue');
+
     const elementBorderStyleInput = document.getElementById('elementBorderStyle');
     const elementBorderColorInput = document.getElementById('elementBorderColor');
-    const elementBoxShadowInput = document.getElementById('elementBoxShadow');
-    const elementTextShadowInput = document.getElementById('elementTextShadow');
+
+    // Box Shadow Inputs
+    const boxShadowOffsetXInput = document.getElementById('boxShadowOffsetX');
+    const boxShadowOffsetYInput = document.getElementById('boxShadowOffsetY');
+    const boxShadowBlurInput = document.getElementById('boxShadowBlur');
+    const boxShadowSpreadInput = document.getElementById('boxShadowSpread');
+    const boxShadowColorInput = document.getElementById('boxShadowColor');
+    const boxShadowInsetCheckbox = document.getElementById('boxShadowInset');
+    const applyBoxShadowBtn = document.getElementById('applyBoxShadowBtn');
+    const clearBoxShadowBtn = document.getElementById('clearBoxShadowBtn');
+
+
+    // Text Shadow Inputs
+    const textShadowOffsetXInput = document.getElementById('textShadowOffsetX');
+    const textShadowOffsetYInput = document.getElementById('textShadowOffsetY');
+    const textShadowBlurInput = document.getElementById('textShadowBlur');
+    const textShadowColorInput = document.getElementById('textShadowColor');
+    const applyTextShadowBtn = document.getElementById('applyTextShadowBtn');
+    const clearTextShadowBtn = document.getElementById('clearTextShadowBtn');
 
 
     let grapesEditor;
@@ -447,28 +788,31 @@
     let dragOffsetX, dragOffsetY;
     let resizeHandleType = '';
     let initialWidth, initialHeight, initialMouseX, initialMouseY, initialLeft, initialTop;
-    let dynamicBgAnimationId = null; // For canvas animations
+    let dynamicBgAnimationId = null;
+    let isEditingText = false; // Flag to indicate if text is being edited
 
+    // Enhanced particle creation with more variety
     function createParticles() {
         if (!particlesContainer) return;
-        particlesContainer.innerHTML = '';
-        const numParticles = 35;
+        particlesContainer.innerHTML = ''; // Clear existing particles
+        const numParticles = 50; // Increased particle count
         for (let i = 0; i < numParticles; i++) {
             const particle = document.createElement('div');
-            const isType2 = Math.random() > 0.65;
+            const isType2 = Math.random() > 0.55; // Slightly more type2 particles
             particle.classList.add('particle');
             if (isType2) particle.classList.add('p2');
-            const size = Math.random() * (isType2 ? 2.8 : 2.2) + 0.8;
+            const size = Math.random() * (isType2 ? 3.5 : 2.8) + 1.2; // Slightly larger particles
             particle.style.width = `${size}px`; particle.style.height = `${size}px`;
             particle.style.left = `${Math.random() * 100}%`; particle.style.top = `${Math.random() * 100}%`;
-            particle.style.setProperty('--float-x', `${(Math.random() - 0.5) * 220}px`);
-            particle.style.setProperty('--float-y', `${(Math.random() - 0.6) * 280}px`);
-            particle.style.setProperty('--float-scale', `${Math.random() * 0.5 + 0.5}`);
-            particle.style.setProperty('--particle-opacity-start', `${Math.random() * 0.25 + 0.4}`);
-            particle.style.setProperty('--particle-opacity-mid', `${Math.random() * 0.15 + 0.05}`);
-            particle.style.setProperty('--particle-opacity-end', `${Math.random() * 0.2 + 0.3}`);
-            particle.style.animationDuration = `${Math.random() * 20 + 18}s`;
-            particle.style.animationDelay = `${Math.random() * 22}s`;
+            // More dynamic movement ranges
+            particle.style.setProperty('--float-x', `${(Math.random() - 0.5) * 300}px`);
+            particle.style.setProperty('--float-y', `${(Math.random() - 0.5) * 350}px`);
+            particle.style.setProperty('--float-scale', `${Math.random() * 0.7 + 0.5}`);
+            particle.style.setProperty('--particle-opacity-start', `${Math.random() * 0.4 + 0.6}`); // Brighter start
+            particle.style.setProperty('--particle-opacity-mid', `${Math.random() * 0.25 + 0.15}`);
+            particle.style.setProperty('--particle-opacity-end', `${Math.random() * 0.3 + 0.4}`);
+            particle.style.animationDuration = `${Math.random() * 18 + 15}s`; // Faster overall animation
+            particle.style.animationDelay = `${Math.random() * 20}s`;
             particlesContainer.appendChild(particle);
         }
     }
@@ -487,12 +831,13 @@
 
     enterBtn.onclick = () => {
       splash.style.opacity = '0';
+      splash.style.transform = 'scale(0.85) translateY(50px)'; // Added translateY for exit animation
       setTimeout(() => {
         splash.style.display = 'none'; app.style.display = 'flex';
-        showView(creatorView); createParticles();
-      }, 700);
+        showView(creatorView);
+      }, 900); // Slightly longer for the enhanced animation
     };
-    splash.style.transition = "opacity 0.7s ease-out";
+
 
     tabEditor.onclick = () => showView(editorView);
     tabCreator.onclick = () => showView(creatorView);
@@ -501,8 +846,8 @@
       grapesEditor = grapesjs.init({
         container: '#editor-container', fromElement: false, height: '100%', storageManager: false,
         plugins: ['gjs-preset-webpage'], pluginsOpts: { 'gjs-preset-webpage': {} },
-        canvas: { styles: ['body{max-width:1200px;margin:0 auto; background-color: #e8efff;}', '*{font-family: Helvetica, Arial, sans-serif;}'], scripts: [] },
-        components: '<div style="padding:25px; color:#222; font-family: Helvetica, Arial, sans-serif; text-align:center;">Пустой холст GrapesJS. Перетащите блоки из панели справа или начните создавать свой уникальный дизайн.</div>',
+        canvas: { styles: ['body{max-width:1200px;margin:0 auto; background-color: #181a2c; color: #e8f0ff}', '*{font-family: "Exo 2", Helvetica, Arial, sans-serif;}'], scripts: [] },
+        components: '<div style="padding:25px; color:#bac8e0; font-family: \'Exo 2\', sans-serif; text-align:center;">Пустой холст GrapesJS. Перетащите блоки из панели справа или начните создавать свой уникальный дизайн.</div>',
         style: ''
       });
     }
@@ -523,7 +868,7 @@
       if (!grapesEditor) { showCustomAlert('Редактор GrapesJS не активен или пуст!', 'error'); return; }
       const html = grapesEditor.getHtml(); const css = grapesEditor.getCss();
       const fullHtml = `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Созданный шаблон (GrapesJS)</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>`;
-      downloadFile(fullHtml, 'template_grapesjs.html', 'text/html');
+      downloadFile(fullHtml, 'template_grapesjs_v7.html', 'text/html');
     };
 
     downloadSiteBtn.onclick = () => {
@@ -531,46 +876,48 @@
         else if (creatorView.classList.contains('active')) { creatorDownloadBtn.onclick(); }
     };
 
-    // --- Dynamic Background Canvas Animations ---
     function stopDynamicBgAnimation() {
         if (dynamicBgAnimationId) {
             cancelAnimationFrame(dynamicBgAnimationId);
             dynamicBgAnimationId = null;
         }
-        const ctx = dynamicBgCanvas.getContext('2d');
-        ctx.clearRect(0, 0, dynamicBgCanvas.width, dynamicBgCanvas.height);
-        dynamicBgCanvas.style.display = 'none';
-         // Reset canvas animation data
+        if (dynamicBgCanvas && dynamicBgCanvas.getContext) {
+            const ctx = dynamicBgCanvas.getContext('2d');
+            ctx.clearRect(0, 0, dynamicBgCanvas.width, dynamicBgCanvas.height);
+        }
+       if(dynamicBgCanvas) dynamicBgCanvas.style.display = 'none';
         rainDrops = [];
         stars = [];
     }
 
+
     let rainDrops = [];
     function digitalRainEffect() {
+        if (!creatorContent || !dynamicBgCanvas) return;
         dynamicBgCanvas.style.display = 'block';
         const ctx = dynamicBgCanvas.getContext('2d');
-        const W = dynamicBgCanvas.width = creatorContent.clientWidth;
-        const H = dynamicBgCanvas.height = creatorContent.clientHeight;
-        const fontSize = 14;
+        dynamicBgCanvas.width = creatorContent.clientWidth;
+        dynamicBgCanvas.height = creatorContent.clientHeight;
+        const W = dynamicBgCanvas.width;
+        const H = dynamicBgCanvas.height;
+        const fontSize = 16; // Slightly larger font for rain
         const columns = Math.floor(W / fontSize);
-        // Always re-initialize rain drops when starting the effect
-        rainDrops = [];
-        for (let i = 0; i < columns; i++) {
-            rainDrops[i] = 1;
+
+        if (rainDrops.length !== columns) {
+            rainDrops = [];
+            for (let i = 0; i < columns; i++) { rainDrops[i] = 1; }
         }
 
         function drawDigitalRain() {
-            ctx.fillStyle = "rgba(3, 7, 15, 0.1)"; // Slightly transparent black for fading effect
+            if (dynamicBgCanvas.style.display === 'none') return;
+            ctx.fillStyle = "rgba(1, 2, 5, 0.07)"; // Darker, more transparent trail
             ctx.fillRect(0, 0, W, H);
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(); // Use accent color
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
             ctx.font = `${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-mono').trim()}`;
-
             for (let i = 0; i < rainDrops.length; i++) {
-                const text = String.fromCharCode(Math.random() * 128); // Random ASCII
+                const text = String.fromCharCode(Math.random() * 128);
                 ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                if (rainDrops[i] * fontSize > H && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
-                }
+                if (rainDrops[i] * fontSize > H && Math.random() > 0.985) { rainDrops[i] = 0; } // Slightly higher chance to reset
                 rainDrops[i]++;
             }
             dynamicBgAnimationId = requestAnimationFrame(drawDigitalRain);
@@ -580,73 +927,58 @@
 
     let stars = [];
     function warpSpeedEffect() {
+        if (!creatorContent || !dynamicBgCanvas) return;
         dynamicBgCanvas.style.display = 'block';
         const ctx = dynamicBgCanvas.getContext('2d');
-        const W = dynamicBgCanvas.width = creatorContent.clientWidth;
-        const H = dynamicBgCanvas.height = creatorContent.clientHeight;
-        const numStars = 300;
-        const speed = 5; // Base speed
+        dynamicBgCanvas.width = creatorContent.clientWidth;
+        dynamicBgCanvas.height = creatorContent.clientHeight;
+        const W = dynamicBgCanvas.width;
+        const H = dynamicBgCanvas.height;
+        const numStars = 400; // More stars
+        const speed = 7; // Faster speed
 
-        // Always re-initialize stars when starting the effect
-        stars = [];
-        for (let i = 0; i < numStars; i++) {
-            stars[i] = {
-                x: Math.random() * W - W / 2, // Center origin
-                y: Math.random() * H - H / 2,
-                z: Math.random() * W,
-                pz: Math.random() * W // previous z
-            };
+        if (stars.length !== numStars || (stars.length > 0 && stars[0].W_orig !== W)) {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars[i] = { x: Math.random()*W-W/2, y: Math.random()*H-H/2, z: Math.random()*W, pz: Math.random()*W, W_orig: W };
+            }
         }
 
         function drawWarpSpeed() {
-            ctx.fillStyle = "rgba(3, 5, 10, 0.2)"; // Fading effect
-            ctx.fillRect(0, 0, W, H);
-            ctx.save();
-            ctx.translate(W / 2, H / 2); // Move to center
-
-            for (let i = 0; i < numStars; i++) {
-                const star = stars[i];
-                star.z -= speed;
-                if (star.z < 1) { // Reset star
-                    star.z = W;
-                    star.x = Math.random() * W - W / 2;
-                    star.y = Math.random() * H - H / 2;
-                    star.pz = star.z;
-                }
-
-                const sx = star.x / star.z * W; // Perspective projection
-                const sy = star.y / star.z * H;
-                const r = Math.max(0.1, (1 - star.z / W) * 2.5); // Radius based on distance
-
-                ctx.beginPath();
-                ctx.arc(sx, sy, r, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 234, 255, ${1 - star.z / W * 0.8})`; // Brighter closer
+            if (dynamicBgCanvas.style.display === 'none') return;
+            ctx.fillStyle = "rgba(0, 1, 3, 0.22)"; // Darker, more transparent trail
+            ctx.fillRect(0, 0, W, H); ctx.save(); ctx.translate(W/2, H/2);
+            for (let i = 0; i < stars.length; i++) {
+                const star = stars[i]; star.z -= speed;
+                if (star.z < 1) { star.z = W; star.x = Math.random()*W-W/2; star.y = Math.random()*H-H/2; star.pz = star.z; }
+                const sx = star.x/star.z*W; const sy = star.y/star.z*H; const r = Math.max(0.1, (1-star.z/W)*3); // Larger max radius
+                ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(0, 248, 255, ${1 - star.z / W * 0.65})`; // Brighter stars
                 ctx.fill();
-
-                // Optional: draw a tail
-                const prev_sx = star.x / star.pz * W;
-                const prev_sy = star.y / star.pz * H;
-                ctx.beginPath();
-                ctx.moveTo(prev_sx, prev_sy);
-                ctx.lineTo(sx, sy);
-                ctx.strokeStyle = `rgba(170, 0, 255, ${0.5 * (1 - star.z / W)})`; // Secondary color tail
-                ctx.lineWidth = r * 1.5;
-                ctx.stroke();
-                star.pz = star.z;
+                const prev_sx = star.x/star.pz*W; const prev_sy = star.y/star.pz*H;
+                ctx.beginPath(); ctx.moveTo(prev_sx, prev_sy); ctx.lineTo(sx, sy);
+                ctx.strokeStyle = `rgba(208, 0, 255, ${0.65 * (1 - star.z / W)})`; // Brighter secondary trails
+                ctx.lineWidth = r * 1.7; ctx.stroke(); star.pz = star.z;
             }
-            ctx.restore();
-            dynamicBgAnimationId = requestAnimationFrame(drawWarpSpeed);
+            ctx.restore(); dynamicBgAnimationId = requestAnimationFrame(drawWarpSpeed);
         }
         drawWarpSpeed();
     }
 
-
     function clearCreatorBackgroundStyles() {
-        stopDynamicBgAnimation(); // Stop any canvas animations and reset data
+        stopDynamicBgAnimation();
+
         creatorContent.style.background = '';
         creatorContent.style.backgroundImage = '';
         creatorContent.style.backgroundColor = 'transparent';
-        creatorContent.classList.remove('animated-gradient-background', 'pattern-animated-grid', 'pattern-animated-dots', 'pattern-animated-lines', 'pattern-hexagonal-mesh');
+
+        const patternClasses = [
+            'animated-gradient-background', 'pattern-animated-grid', 'pattern-animated-dots',
+            'pattern-animated-lines', 'pattern-hexagonal-mesh', 'pattern-cosmic-pulse',
+            'pattern-techno-circuit', 'pattern-aurora-borealis'
+        ];
+        patternClasses.forEach(cls => creatorContent.classList.remove(cls));
+
         creatorContent.style.removeProperty('--gradient-color-1');
         creatorContent.style.removeProperty('--gradient-color-2');
         creatorContent.style.removeProperty('--gradient-direction');
@@ -662,19 +994,21 @@
     patternPicker.onchange = e => {
         clearCreatorBackgroundStyles();
         const selectedPatternClass = e.target.value;
+
         if (selectedPatternClass === 'pattern-digital-rain') {
             digitalRainEffect();
         } else if (selectedPatternClass === 'pattern-warp-speed') {
             warpSpeedEffect();
         } else if (selectedPatternClass !== 'none') {
             creatorContent.classList.add(selectedPatternClass);
+        } else {
+            creatorContent.style.backgroundColor = solidColorPicker.value;
         }
-        // Reset color picker and gradient options when a pattern is selected
-        solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+
+        if (selectedPatternClass !== 'none') {
+            solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+        }
         gradientAnimate.checked = false;
-        // Ensure gradient styles are removed if a pattern is selected
-        creatorContent.style.background = '';
-        creatorContent.style.backgroundImage = '';
     };
 
     applyGradientBtn.onclick = () => {
@@ -684,123 +1018,177 @@
         creatorContent.style.setProperty('--gradient-color-1', c1);
         creatorContent.style.setProperty('--gradient-color-2', c2);
         creatorContent.style.setProperty('--gradient-direction', dir);
-        if (anim) { creatorContent.classList.add('animated-gradient-background'); }
-        else { creatorContent.style.background = `linear-gradient(${dir}, ${c1}, ${c2})`; }
-        // Reset color picker and pattern options when gradient is applied
-        solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+
+        if (anim) {
+            creatorContent.classList.add('animated-gradient-background');
+        } else {
+            creatorContent.style.backgroundImage = `linear-gradient(${dir}, ${c1}, ${c2})`;
+            creatorContent.style.backgroundColor = 'transparent';
+        }
         patternPicker.value = 'none';
+        solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
     };
 
-    function addElementToCreator(elementType) {
+
+    function addElementToCreator(elementType, textContent = '', styles = {}, parentEl = creatorContent) {
         let el;
-        const textContent = newElementTextInput.value || `Новый ${elementType}`;
+        const content = textContent || `Новый ${elementType}`;
         switch(elementType) {
             case 'Text':
-                el = document.createElement('div'); el.textContent = textContent;
-                el.style.padding = '10px'; el.style.color = elementTextColorInput.value;
-                el.style.fontFamily = elementFontFamilyInput.value;
-                el.style.fontSize = elementFontSizeInput.value || '16px';
+                el = document.createElement('div'); el.textContent = content;
+                el.style.padding = '12px'; el.style.color = styles.color || elementTextColorInput.value;
+                el.style.fontFamily = styles.fontFamily || elementFontFamilyInput.value;
+                el.style.fontSize = styles.fontSize || `${elementFontSizeInput.value || 16}${elementFontSizeUnit.value}`;
                 break;
             case 'Button':
-                el = document.createElement('button'); el.textContent = textContent;
-                el.style.padding = '12px 20px'; el.style.border = '1px solid var(--accent)';
-                el.style.backgroundColor = 'rgba(0,0,0,0.5)'; el.style.color = 'var(--accent)';
-                el.style.cursor = 'pointer'; el.style.fontFamily = elementFontFamilyInput.value;
-                el.style.fontSize = elementFontSizeInput.value || '14px';
-                el.style.borderRadius = '5px'; el.style.letterSpacing = '1.2px';
+                el = document.createElement('button'); el.textContent = content;
+                el.style.padding = '12px 22px'; el.style.border = styles.border || '2px solid var(--accent)';
+                el.style.backgroundColor = styles.backgroundColor || 'rgba(8, 10, 22, 0.75)';
+                el.style.color = styles.color || 'var(--accent)';
+                el.style.cursor = 'pointer'; el.style.fontFamily = styles.fontFamily || elementFontFamilyInput.value;
+                el.style.fontSize = styles.fontSize || `${elementFontSizeInput.value || 14}${elementFontSizeUnit.value}`;
+                el.style.borderRadius = styles.borderRadius || '8px'; el.style.letterSpacing = '1.8px';
+                el.style.textTransform = 'uppercase';
+                // Add a basic hover effect for dynamically added buttons
+                el.onmouseenter = () => { el.style.backgroundColor = 'var(--accent)'; el.style.color = 'var(--bg-dark)'; el.style.boxShadow = '0 0 15px var(--neon-glow)';};
+                el.onmouseleave = () => { el.style.backgroundColor = 'rgba(8, 10, 22, 0.75)'; el.style.color = 'var(--accent)'; el.style.boxShadow = 'none';};
                 break;
             case 'Image':
-                const src = prompt("Введите URL изображения:", "https://placehold.co/220x160/0eafff/06070f?text=ГрафОбъект&font=exo2");
-                if (!src) return;
-                el = document.createElement('img'); el.src = src; el.alt = textContent;
-                el.style.maxWidth = '100%'; el.style.height = 'auto';
-                el.style.border = '1px solid rgba(0,234,255,0.25)'; el.style.borderRadius = '4px';
-                el.onerror = () => { el.src = 'https://placehold.co/220x160/ff3b6f/fff?text=ОшибкаURL&font=exo2'; showCustomAlert('Не удалось загрузить изображение.', 'error');};
+                const src = styles.src || "https://placehold.co/280x200/00f8ff/04050a?text=ГрафОбъект&font=exo2";
+                el = document.createElement('img'); el.src = src; el.alt = content;
+                el.style.maxWidth = styles.maxWidth || '100%'; el.style.height = styles.height || 'auto';
+                el.style.border = styles.border || '2px solid rgba(0,248,255,0.35)'; el.style.borderRadius = styles.borderRadius || '6px';
+                el.onerror = () => { el.src = 'https://placehold.co/280x200/ff3b6f/fff?text=ОшибкаURL&font=exo2'; showCustomAlert('Не удалось загрузить изображение.', 'error');};
                 break;
             case 'Div':
-                el = document.createElement('div'); el.textContent = textContent;
-                el.style.padding = '25px'; el.style.minHeight = '70px'; el.style.minWidth = '140px';
-                el.style.backgroundColor = 'rgba(0,234,255,0.06)';
-                el.style.border = '1px dashed var(--accent-secondary)';
-                el.style.color = elementTextColorInput.value;
-                el.style.fontFamily = elementFontFamilyInput.value;
-                el.style.fontSize = elementFontSizeInput.value || '16px';
+                el = document.createElement('div'); el.textContent = content;
+                el.style.padding = styles.padding || '28px'; el.style.minHeight = styles.minHeight || '90px'; el.style.minWidth = styles.minWidth || '160px';
+                el.style.backgroundColor = styles.backgroundColor || 'rgba(0,248,255,0.08)';
+                el.style.border = styles.border || '2px dashed var(--accent-secondary)';
+                el.style.color = styles.color || elementTextColorInput.value;
+                el.style.fontFamily = styles.fontFamily || elementFontFamilyInput.value;
+                el.style.fontSize = styles.fontSize || `${elementFontSizeInput.value || 16}${elementFontSizeUnit.value}`;
                 break;
         }
         if (el) {
-            el.style.opacity = elementOpacityInput.value; // Apply initial opacity
-            creatorContent.appendChild(el); // Append first to get dimensions
+            el.style.opacity = styles.opacity || elementOpacityInput.value;
+            // Apply other random styles
+            if (styles.width) el.style.width = styles.width;
+            if (styles.height) el.style.height = styles.height;
+            if (styles.borderRadius) el.style.borderRadius = styles.borderRadius;
+            if (styles.borderWidth) el.style.borderWidth = styles.borderWidth;
+            if (styles.borderStyle) el.style.borderStyle = styles.borderStyle;
+            if (styles.borderColor) el.style.borderColor = styles.borderColor;
+            if (styles.boxShadow) el.style.boxShadow = styles.boxShadow;
+            if (styles.textShadow) el.style.textShadow = styles.textShadow;
+
+
+            parentEl.appendChild(el); // Append to the specified parent
             makeElementEditable(el);
             newElementTextInput.value = '';
+
+            // Set random position relative to the parent
+             const parentRect = parentEl.getBoundingClientRect();
+             const elWidth = el.offsetWidth;
+             const elHeight = el.offsetHeight;
+
+             // Ensure element is within parent bounds, with some padding
+             const maxLeft = parentEl.clientWidth - elWidth - 20;
+             const maxTop = parentEl.clientHeight - elHeight - 20;
+
+             const randomLeft = Math.random() * maxLeft;
+             const randomTop = Math.random() * maxTop;
+
+             el.style.left = `${Math.max(10, randomLeft)}px`; // Min 10px from left
+             el.style.top = `${Math.max(10, randomTop)}px`; // Min 10px from top
         }
     }
-    addTextBtn.onclick = () => addElementToCreator('Text');
-    addButtonBtn.onclick = () => addElementToCreator('Button');
-    addImageBtn.onclick = () => addElementToCreator('Image');
-    addDivBtn.onclick = () => addElementToCreator('Div');
+    addTextBtn.onclick = () => addElementToCreator('Text', newElementTextInput.value);
+    addButtonBtn.onclick = () => addElementToCreator('Button', newElementTextInput.value);
+    addImageBtn.onclick = () => {
+        const src = prompt("Введите URL изображения:", "https://placehold.co/280x200/00f8ff/04050a?text=ГрафОбъект&font=exo2");
+        if (src) addElementToCreator('Image', newElementTextInput.value, { src: src });
+    };
+    addDivBtn.onclick = () => addElementToCreator('Div', newElementTextInput.value);
 
     function makeElementEditable(el) {
       el.classList.add('editable-element');
-      el.style.position = 'absolute';
+      el.style.position = 'absolute'; // Keep absolute for drag-and-drop within parent
+      // Ensure initial size is set if not already
+      if (!el.style.width) el.style.width = `${el.offsetWidth}px`;
+      if (!el.style.height) el.style.height = `${el.offsetHeight}px`;
 
-      // Set initial size based on content after appending
-      el.style.width = `${el.offsetWidth}px`;
-      el.style.height = `${el.offsetHeight}px`;
-
-      const creatorRect = creatorContent.getBoundingClientRect();
-      const initialLeftPos = creatorContent.scrollLeft + Math.min(30, creatorContent.clientWidth - el.offsetWidth - 10);
-      const initialTopPos = creatorContent.scrollTop + Math.min(30, creatorContent.clientHeight - el.offsetHeight - 10);
-      el.style.left = `${initialLeftPos}px`;
-      el.style.top = `${initialTopPos}px`;
 
       el.addEventListener('mousedown', onElementMouseDown);
       el.addEventListener('dragstart', (e) => e.preventDefault());
+      el.addEventListener('dblclick', handleElementDoubleClick); // Add double-click listener
     }
 
     function onElementMouseDown(e) {
-      if (e.target.classList.contains('resize-handle')) return;
+      if (e.target.classList.contains('resize-handle') || isEditingText) return; // Prevent drag while editing text
       e.stopPropagation(); selectElement(this);
       isDragging = true; isResizing = false;
-      dragOffsetX = e.clientX - parseFloat(this.style.left || 0);
-      dragOffsetY = e.clientY - parseFloat(this.style.top || 0);
+      const elRect = this.getBoundingClientRect();
+      const parentRect = this.parentElement.getBoundingClientRect(); // Get parent rect
+      dragOffsetX = e.clientX - elRect.left;
+      dragOffsetY = e.clientY - elRect.top;
       document.addEventListener('mousemove', onElementMouseMove);
       document.addEventListener('mouseup', onElementMouseUp);
     }
 
     function onElementMouseMove(e) {
       if (!selectedCreatorElement) return;
+       if (isEditingText) return; // Prevent drag while editing text
+      const parentEl = selectedCreatorElement.parentElement; // Get parent element
+      const parentRect = parentEl.getBoundingClientRect(); // Get parent rect
+
       if (isDragging) {
-        let newX = e.clientX - dragOffsetX;
-        let newY = e.clientY - dragOffsetY;
+        let newX = e.clientX - dragOffsetX - parentRect.left + parentEl.scrollLeft; // Position relative to parent, considering parent scroll
+        let newY = e.clientY - dragOffsetY - parentRect.top + parentEl.scrollTop; // Position relative to parent, considering parent scroll
+
+        // Clamp to parent bounds
+        const elWidth = selectedCreatorElement.offsetWidth;
+        const elHeight = selectedCreatorElement.offsetHeight;
+        const maxLeft = parentEl.scrollLeft + parentEl.clientWidth - elWidth;
+        const maxTop = parentEl.scrollTop + parentEl.clientHeight - elHeight;
+
+        newX = Math.max(parentEl.scrollLeft, Math.min(newX, maxLeft));
+        newY = Math.max(parentEl.scrollTop, Math.min(newY, maxTop));
+
+
         selectedCreatorElement.style.left = `${newX}px`;
         selectedCreatorElement.style.top = `${newY}px`;
       } else if (isResizing && selectedCreatorElement) {
-        const currentX = e.clientX;
-        const currentY = e.clientY;
-        let newWidth = initialWidth;
-        let newHeight = initialHeight;
-        let newLeft = initialLeft;
-        let newTop = initialTop;
-        const dx = currentX - initialMouseX;
-        const dy = currentY - initialMouseY;
+        const currentX = e.clientX; const currentY = e.clientY;
+        let newWidth = initialWidth; let newHeight = initialHeight;
+        let newLeft = initialLeft; let newTop = initialTop;
+        const dx = currentX - initialMouseX; const dy = currentY - initialMouseY;
 
-        // Calculate new dimensions and position based on handle type
         if (resizeHandleType.includes('e')) newWidth = initialWidth + dx;
         if (resizeHandleType.includes('w')) { newWidth = initialWidth - dx; newLeft = initialLeft + dx; }
         if (resizeHandleType.includes('s')) newHeight = initialHeight + dy;
         if (resizeHandleType.includes('n')) { newHeight = initialHeight - dy; newTop = initialTop + dy; }
 
-        // Apply minimum dimensions
-        newWidth = Math.max(selectedCreatorElement.style.minWidth ? parseFloat(selectedCreatorElement.style.minWidth) : 30, newWidth);
-        newHeight = Math.max(selectedCreatorElement.style.minHeight ? parseFloat(selectedCreatorElement.style.minHeight) : 20, newHeight);
+        newWidth = Math.max(parseFloat(selectedCreatorElement.style.minWidth) || 35, newWidth); // Adjusted min
+        newHeight = Math.max(parseFloat(selectedCreatorElement.style.minHeight) || 25, newHeight); // Adjusted min
 
-        // Update element styles
+         // Clamp resized element to parent bounds
+        const elRight = newLeft + newWidth;
+        const elBottom = newTop + newHeight;
+        const parentRight = parentEl.scrollLeft + parentEl.clientWidth;
+        const parentBottom = parentEl.scrollTop + parentEl.clientHeight;
+
+        if (newLeft < parentEl.scrollLeft) { newWidth -= (parentEl.scrollLeft - newLeft); newLeft = parentEl.scrollLeft; }
+        if (newTop < parentEl.scrollTop) { newHeight -= (parentEl.scrollTop - newTop); newTop = parentEl.scrollTop; }
+        if (elRight > parentRight) newWidth -= (elRight - parentRight);
+        if (elBottom > parentBottom) newHeight -= (elBottom - parentBottom);
+
+
         selectedCreatorElement.style.width = `${newWidth}px`;
         selectedCreatorElement.style.height = `${newHeight}px`;
-        selectedCreatorElement.style.left = `${newLeft}px`; // Always update left/top as they might change with w/n handles
+        selectedCreatorElement.style.left = `${newLeft}px`;
         selectedCreatorElement.style.top = `${newTop}px`;
-
-        updatePropertyInputs(selectedCreatorElement); // Update sidebar with new dimensions
+        updatePropertyInputs(selectedCreatorElement);
       }
     }
 
@@ -826,7 +1214,64 @@
         selectedCreatorElement = null; clearPropertyInputs();
       }
     }
-    creatorContent.addEventListener('mousedown', (e) => { if (e.target === creatorContent || e.target === dynamicBgCanvas) deselectAllElements(); });
+    creatorContent.addEventListener('mousedown', (e) => {
+        // Deselect unless clicking on an editable element, a resize handle, or a structural div
+        if (!e.target.classList.contains('editable-element') && !e.target.classList.contains('resize-handle') && !e.target.classList.contains('structural-div') && e.target !== dynamicBgCanvas) {
+             deselectAllElements();
+        }
+    });
+     // Also deselect if clicking directly on structural divs
+    creatorContent.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('structural-div')) {
+            deselectAllElements();
+        }
+    });
+
+    // Handle double-click for text editing
+    function handleElementDoubleClick(e) {
+        const target = e.target;
+        // Check if the target is a text-based element (DIV, BUTTON) and not an image or structural div
+        if (target.tagName === 'DIV' || target.tagName === 'BUTTON') {
+            e.stopPropagation(); // Prevent selecting the element on double-click
+            isEditingText = true; // Set editing flag
+            target.contentEditable = 'true';
+            target.focus(); // Focus the element for editing
+            // Optional: Add a visual cue for editing state
+            target.style.outline = '2px dashed var(--accent-secondary)';
+            target.style.cursor = 'text';
+
+            // Add event listeners to stop editing
+            target.addEventListener('blur', stopTextEditing);
+            target.addEventListener('keypress', stopTextEditingOnEnter);
+        }
+    }
+
+    // Stop text editing when element loses focus
+    function stopTextEditing(e) {
+        const target = e.target;
+        target.contentEditable = 'false';
+        isEditingText = false; // Clear editing flag
+        // Remove visual cue
+        target.style.outline = '';
+         target.style.cursor = 'grab';
+
+        // Remove event listeners
+        target.removeEventListener('blur', stopTextEditing);
+        target.removeEventListener('keypress', stopTextEditingOnEnter);
+         // Update the property inputs if this element is selected
+        if (selectedCreatorElement === target) {
+            updatePropertyInputs(target);
+        }
+    }
+
+    // Stop text editing on Enter key press
+    function stopTextEditingOnEnter(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent new line in contenteditable
+            stopTextEditing({ target: e.target }); // Call stop editing function
+        }
+    }
+
 
     function addResizeHandles(el) {
       removeResizeHandles(el);
@@ -841,9 +1286,7 @@
     function onResizeHandleMouseDown(e) {
       e.stopPropagation(); e.preventDefault(); isResizing = true; isDragging = false;
       resizeHandleType = Array.from(this.classList).find(c => c.length <= 2 && c !== 'resize-handle');
-      // Use clientWidth/clientHeight for initial dimensions as style.width/height might be empty
-      initialWidth = selectedCreatorElement.clientWidth;
-      initialHeight = selectedCreatorElement.clientHeight;
+      initialWidth = selectedCreatorElement.clientWidth; initialHeight = selectedCreatorElement.clientHeight;
       initialMouseX = e.clientX; initialMouseY = e.clientY;
       initialLeft = parseFloat(selectedCreatorElement.style.left || 0);
       initialTop = parseFloat(selectedCreatorElement.style.top || 0);
@@ -861,182 +1304,390 @@
     function updatePropertyInputs(element) {
         if (!element) return;
         elementOpacityInput.value = element.style.opacity || '1';
+        elementOpacityValue.textContent = elementOpacityInput.value;
+
+        const currentFontSize = element.style.fontSize || (element.computedStyleMap ? `${element.computedStyleMap().get('font-size').value}px` : '16px');
+        const [fsValue, fsUnit] = parseUnitValue(currentFontSize, '16px');
+        elementFontSizeInput.value = fsValue;
+        elementFontSizeSlider.value = fsValue;
+        elementFontSizeValue.textContent = fsValue;
+        elementFontSizeUnit.value = fsUnit || 'px';
+
         elementFontFamilyInput.value = element.style.fontFamily || getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
-        elementFontSizeInput.value = element.style.fontSize || '';
-        // Display current computed width/height if inline styles are not set
-        elementWidthInput.value = element.style.width || `${element.clientWidth}px`;
-        elementHeightInput.value = element.style.height || `${element.clientHeight}px`;
+
+        const currentWidth = element.style.width || `${element.clientWidth}px`;
+        const [wValue, wUnit] = parseUnitValue(currentWidth, '100px');
+        elementWidthInput.value = (wUnit === 'auto') ? '' : wValue;
+        elementWidthSlider.value = (wUnit === 'auto' || wUnit === '%') ? 100 : wValue;
+        elementWidthValue.textContent = (wUnit === 'auto') ? 'auto' : wValue;
+        elementWidthUnit.value = wUnit || 'px';
+
+
+        const currentHeight = element.style.height || `${element.clientHeight}px`;
+        const [hValue, hUnit] = parseUnitValue(currentHeight, '50px');
+        elementHeightInput.value = (hUnit === 'auto') ? '' : hValue;
+        elementHeightSlider.value = (hUnit === 'auto' || hUnit === '%') ? 50 : hValue;
+        elementHeightValue.textContent = (hUnit === 'auto') ? 'auto' : hValue;
+        elementHeightUnit.value = hUnit || 'px';
+
+
         elementBgColorInput.value = rgbToHex(element.style.backgroundColor) || getComputedStyle(document.documentElement).getPropertyValue('--bg-medium').trim();
         elementTextColorInput.value = rgbToHex(element.style.color) || getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
-        elementBorderRadiusInput.value = element.style.borderRadius || '';
-        elementBorderWidthInput.value = element.style.borderWidth || '';
+
+        const currentBorderRadius = element.style.borderRadius || '0px';
+        const [brValue, brUnit] = parseUnitValue(currentBorderRadius, '3px');
+        elementBorderRadiusInput.value = brValue;
+        elementBorderRadiusSlider.value = brValue;
+        elementBorderRadiusValue.textContent = brValue;
+        elementBorderRadiusUnit.value = brUnit || 'px';
+
+        const currentBorderWidth = element.style.borderWidth || '0px';
+        const [bwValue, ] = parseUnitValue(currentBorderWidth, '1px');
+        elementBorderWidthInput.value = bwValue;
+        elementBorderWidthSlider.value = bwValue;
+        elementBorderWidthValue.textContent = bwValue;
+
+
         elementBorderStyleInput.value = element.style.borderStyle || 'none';
         elementBorderColorInput.value = rgbToHex(element.style.borderColor) || getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-        elementBoxShadowInput.value = element.style.boxShadow || '';
-        elementTextShadowInput.value = element.style.textShadow || '';
-    }
-    function clearPropertyInputs() {
-        elementOpacityInput.value = '1';
-        elementFontFamilyInput.value = getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
-        elementFontSizeInput.value = '';
-        elementWidthInput.value = ''; elementHeightInput.value = '';
-        elementBgColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-medium').trim();
-        elementTextColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
-        elementBorderRadiusInput.value = ''; elementBorderWidthInput.value = '';
-        elementBorderStyleInput.value = 'none';
-        elementBorderColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-        elementBoxShadowInput.value = ''; elementTextShadowInput.value = '';
+
+        parseAndSetBoxShadow(element.style.boxShadow);
+        parseAndSetTextShadow(element.style.textShadow);
     }
 
-    // Event listeners for new property inputs
-    elementOpacityInput.oninput = (e) => updateElementStyle('opacity', e.target.value);
+    function clearPropertyInputs() {
+        elementOpacityInput.value = '1'; elementOpacityValue.textContent = '1';
+        elementFontFamilyInput.value = getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
+
+        elementFontSizeInput.value = '16'; elementFontSizeSlider.value = '16'; elementFontSizeValue.textContent = '16'; elementFontSizeUnit.value = 'px';
+        elementWidthInput.value = ''; elementWidthSlider.value = '100'; elementWidthValue.textContent = 'auto'; elementWidthUnit.value = 'auto';
+        elementHeightInput.value = ''; elementHeightSlider.value = '50'; elementHeightValue.textContent = 'auto'; elementHeightUnit.value = 'auto';
+
+        elementBgColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-medium').trim();
+        elementTextColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+
+        elementBorderRadiusInput.value = '3'; elementBorderRadiusSlider.value = '3'; elementBorderRadiusValue.textContent = '3'; elementBorderRadiusUnit.value = 'px';
+        elementBorderWidthInput.value = '1'; elementBorderWidthSlider.value = '1'; elementBorderWidthValue.textContent = '1';
+
+        elementBorderStyleInput.value = 'none';
+        elementBorderColorInput.value = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+
+        clearBoxShadowInputs();
+        clearTextShadowInputs();
+    }
+
+    function setupSliderSync(textInput, sliderInput, valueDisplay, unitSelect, propertyName, defaultUnit = 'px', isUnitless = false) {
+        textInput.oninput = () => {
+            let value = parseFloat(textInput.value) || 0;
+            sliderInput.value = value;
+            if (valueDisplay) valueDisplay.textContent = value;
+            updateElementStyle(propertyName, `${value}${unitSelect ? unitSelect.value : (isUnitless ? '' : defaultUnit)}`);
+        };
+        sliderInput.oninput = () => {
+            let value = sliderInput.value;
+            textInput.value = value;
+            if (valueDisplay) valueDisplay.textContent = value;
+            updateElementStyle(propertyName, `${value}${unitSelect ? unitSelect.value : (isUnitless ? '' : defaultUnit)}`);
+        };
+        if (unitSelect) {
+            unitSelect.onchange = () => {
+                 let value = textInput.value || sliderInput.value;
+                 if (unitSelect.value === 'auto' && (propertyName === 'width' || propertyName === 'height')) {
+                    updateElementStyle(propertyName, 'auto');
+                    if (valueDisplay) valueDisplay.textContent = 'auto';
+                 } else {
+                    updateElementStyle(propertyName, `${value}${unitSelect.value}`);
+                    if (valueDisplay) valueDisplay.textContent = value;
+                 }
+            };
+        }
+    }
+
+    setupSliderSync(elementOpacityInput, elementOpacityInput, elementOpacityValue, null, 'opacity', '', true);
+    setupSliderSync(elementFontSizeInput, elementFontSizeSlider, elementFontSizeValue, elementFontSizeUnit, 'fontSize');
+    setupSliderSync(elementWidthInput, elementWidthSlider, elementWidthValue, elementWidthUnit, 'width');
+    setupSliderSync(elementHeightInput, elementHeightSlider, elementHeightValue, elementHeightUnit, 'height');
+    setupSliderSync(elementBorderRadiusInput, elementBorderRadiusSlider, elementBorderRadiusValue, elementBorderRadiusUnit, 'borderRadius');
+    setupSliderSync(elementBorderWidthInput, elementBorderWidthSlider, elementBorderWidthValue, null, 'borderWidth', 'px');
+
     elementFontFamilyInput.onchange = (e) => updateElementStyle('fontFamily', e.target.value);
-    elementFontSizeInput.onchange = (e) => updateElementStyle('fontSize', e.target.value);
-    elementBorderRadiusInput.onchange = (e) => updateElementStyle('borderRadius', e.target.value);
-    elementBorderWidthInput.onchange = (e) => updateElementStyle('borderWidth', e.target.value);
     elementBorderStyleInput.onchange = (e) => updateElementStyle('borderStyle', e.target.value);
     elementBorderColorInput.oninput = (e) => updateElementStyle('borderColor', e.target.value);
-    elementBoxShadowInput.onchange = (e) => updateElementStyle('boxShadow', e.target.value);
-    elementTextShadowInput.onchange = (e) => updateElementStyle('textShadow', e.target.value);
-    // Existing listeners
-    elementWidthInput.onchange = (e) => updateElementStyle('width', e.target.value);
-    elementHeightInput.onchange = (e) => updateElementStyle('height', e.target.value);
     elementBgColorInput.oninput = (e) => updateElementStyle('backgroundColor', e.target.value);
     elementTextColorInput.oninput = (e) => updateElementStyle('color', e.target.value);
 
 
-    function updateElementStyle(property, value) { if (selectedCreatorElement) selectedCreatorElement.style[property] = value; }
+    function updateElementStyle(property, value) {
+        if (selectedCreatorElement) {
+            if ((property === 'width' || property === 'height') && value === 'auto') {
+                selectedCreatorElement.style[property] = 'auto';
+            } else {
+                 selectedCreatorElement.style[property] = value;
+            }
+            if (property === 'width' || property === 'height') {
+                // For width/height, also update the slider and text input to reflect the actual clientWidth/Height if 'auto' was set
+                // This might be complex if 'auto' is set and then a unit is changed. For now, direct update.
+                updatePropertyInputs(selectedCreatorElement); // Re-sync all inputs based on current style
+            }
+        }
+    }
+
+    function applyBoxShadow() {
+        if (!selectedCreatorElement) return;
+        const offsetX = boxShadowOffsetXInput.value + 'px';
+        const offsetY = boxShadowOffsetYInput.value + 'px';
+        const blur = boxShadowBlurInput.value + 'px';
+        const spread = boxShadowSpreadInput.value + 'px';
+        const color = boxShadowColorInput.value;
+        const inset = boxShadowInsetCheckbox.checked ? 'inset' : '';
+        selectedCreatorElement.style.boxShadow = `${inset} ${offsetX} ${offsetY} ${blur} ${spread} ${color}`.trim();
+    }
+
+    function clearBoxShadowInputs() {
+        boxShadowOffsetXInput.value = '0'; boxShadowOffsetYInput.value = '0';
+        boxShadowBlurInput.value = '0'; boxShadowSpreadInput.value = '0';
+        boxShadowColorInput.value = '#000000'; boxShadowInsetCheckbox.checked = false;
+    }
+    clearBoxShadowBtn.onclick = () => {
+        if(selectedCreatorElement) selectedCreatorElement.style.boxShadow = 'none';
+        clearBoxShadowInputs();
+    }
+
+
+    function parseAndSetBoxShadow(shadowString) {
+        clearBoxShadowInputs();
+        if (!shadowString || shadowString === 'none') return;
+        const insetMatch = shadowString.match(/inset/);
+        if (insetMatch) boxShadowInsetCheckbox.checked = true;
+        const noInsetString = shadowString.replace('inset', '').trim();
+        const parts = noInsetString.match(/(rgba?\(.+?\)|#([0-9a-fA-F]{3}){1,2}|[a-zA-Z]+)\s*$/);
+        let color = '#000000';
+        let numericPartsString = noInsetString;
+        if (parts && parts[0]) {
+            color = parts[0].trim();
+            numericPartsString = noInsetString.substring(0, noInsetString.lastIndexOf(color)).trim();
+        }
+        const values = numericPartsString.split(/\s+/).map(v => parseFloat(v) || 0);
+        if (values.length >= 2) {
+            boxShadowOffsetXInput.value = values[0];
+            boxShadowOffsetYInput.value = values[1];
+            if (values.length >= 3) boxShadowBlurInput.value = values[2];
+            if (values.length >= 4) boxShadowSpreadInput.value = values[3];
+        }
+        boxShadowColorInput.value = rgbToHex(color) || color;
+    }
+
+
+    function applyTextShadow() {
+        if (!selectedCreatorElement) return;
+        const offsetX = textShadowOffsetXInput.value + 'px';
+        const offsetY = textShadowOffsetYInput.value + 'px';
+        const blur = textShadowBlurInput.value + 'px';
+        const color = textShadowColorInput.value;
+        selectedCreatorElement.style.textShadow = `${offsetX} ${offsetY} ${blur} ${color}`;
+    }
+    function clearTextShadowInputs() {
+        textShadowOffsetXInput.value = '0'; textShadowOffsetYInput.value = '0';
+        textShadowBlurInput.value = '0'; textShadowColorInput.value = '#000000';
+    }
+     clearTextShadowBtn.onclick = () => {
+        if(selectedCreatorElement) selectedCreatorElement.style.textShadow = 'none';
+        clearTextShadowInputs();
+    }
+
+    function parseAndSetTextShadow(shadowString) {
+        clearTextShadowInputs();
+        if (!shadowString || shadowString === 'none') return;
+        const parts = shadowString.match(/(rgba?\(.+?\)|#([0-9a-fA-F]{3}){1,2}|[a-zA-Z]+)\s*$/);
+        let color = '#000000';
+        let numericPartsString = shadowString;
+        if (parts && parts[0]) {
+            color = parts[0].trim();
+            numericPartsString = shadowString.substring(0, shadowString.lastIndexOf(color)).trim();
+        }
+        const values = numericPartsString.split(/\s+/).map(v => parseFloat(v) || 0);
+        if (values.length >= 2) {
+            textShadowOffsetXInput.value = values[0];
+            textShadowOffsetYInput.value = values[1];
+            if (values.length >= 3) textShadowBlurInput.value = values[2];
+        }
+        textShadowColorInput.value = rgbToHex(color) || color;
+    }
+
+    applyBoxShadowBtn.onclick = applyBoxShadow;
+    applyTextShadowBtn.onclick = applyTextShadow;
+    [boxShadowOffsetXInput, boxShadowOffsetYInput, boxShadowBlurInput, boxShadowSpreadInput, boxShadowColorInput, boxShadowInsetCheckbox].forEach(input => {
+        input.onchange = applyBoxShadow; if(input.type !== 'checkbox') input.oninput = applyBoxShadow;
+    });
+    [textShadowOffsetXInput, textShadowOffsetYInput, textShadowBlurInput, textShadowColorInput].forEach(input => {
+        input.onchange = applyTextShadow; input.oninput = applyTextShadow;
+    });
+
 
     function rgbToHex(rgb) {
-        if (!rgb || rgb === 'transparent' || rgb === '') return null;
+        if (!rgb || typeof rgb !== 'string' || rgb === 'transparent' || rgb === '') return null;
+        if (rgb.startsWith('#')) return rgb; // Already hex
         let match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d\.]+)?\)$/);
-        if (!match) return rgb;
+        if (!match) return rgb; // Not a parsable RGB/RGBA string
         function hex(x) { return ("0" + parseInt(x).toString(16)).slice(-2); }
         return "#" + hex(match[1]) + hex(match[2]) + hex(match[3]);
     }
 
+    function parseUnitValue(valueString, defaultValue = '0px') {
+        if (!valueString && defaultValue) valueString = defaultValue;
+        if (!valueString) return [0, 'px'];
+        if (valueString === 'auto') return ['', 'auto']; // Return empty string for value if auto
+        const match = valueString.match(/^(\d*\.?\d+)\s*([a-zA-Z%]*)$/);
+        if (match) { return [parseFloat(match[1]), match[2] || 'px']; }
+        return [parseFloat(valueString) || 0, 'px']; // Fallback
+    }
+
+
     creatorDownloadBtn.onclick = () => {
         let contentHtml = '';
-        creatorContent.querySelectorAll('.editable-element').forEach(el => {
-            const clone = el.cloneNode(true);
-            clone.classList.remove('selected', 'editable-element');
-            clone.querySelectorAll('.resize-handle').forEach(h => h.remove());
+        // Iterate through structural divs first
+        creatorContent.querySelectorAll('.structural-div').forEach(structuralDiv => {
+             const structuralClone = structuralDiv.cloneNode(false); // Clone div but not children
+             structuralClone.classList.remove('selected'); // Remove selected class if present
 
-            // Consolidate all inline styles for the clone
-            let inlineStyles = `position: absolute; left: ${el.style.left}; top: ${el.style.top}; width: ${el.style.width || el.clientWidth + 'px'}; height: ${el.style.height || el.clientHeight + 'px'};`;
-            // Add other relevant styles that were applied dynamically
-            if (el.style.opacity) inlineStyles += ` opacity: ${el.style.opacity};`;
-            if (el.style.fontFamily) inlineStyles += ` font-family: ${el.style.fontFamily};`;
-            if (el.style.fontSize) inlineStyles += ` font-size: ${el.style.fontSize};`;
-            if (el.style.backgroundColor) inlineStyles += ` background-color: ${el.style.backgroundColor};`;
-            if (el.style.color) inlineStyles += ` color: ${el.style.color};`;
-            if (el.style.borderRadius) inlineStyles += ` border-radius: ${el.style.borderRadius};`;
-            if (el.style.borderWidth) inlineStyles += ` border-width: ${el.style.borderWidth};`;
-            if (el.style.borderStyle && el.style.borderStyle !=='none') inlineStyles += ` border-style: ${el.style.borderStyle};`;
-            if (el.style.borderColor) inlineStyles += ` border-color: ${el.style.borderColor};`;
-            if (el.style.boxShadow) inlineStyles += ` box-shadow: ${el.style.boxShadow};`;
-            if (el.style.textShadow) inlineStyles += ` text-shadow: ${el.style.textShadow};`;
-            if (el.style.padding) inlineStyles += ` padding: ${el.style.padding};`; // Common for text/divs
-            // For buttons, specific border might be set by default, ensure it's captured if not overridden
-            if (el.tagName === 'BUTTON' && el.style.border) inlineStyles += ` border: ${el.style.border};`;
+             // Copy relevant styles from the structural div
+             let structuralStyles = `position: absolute; left: ${structuralDiv.style.left}; top: ${structuralDiv.style.top}; width: ${structuralDiv.style.width}; height: ${structuralDiv.style.height}; padding: ${structuralDiv.style.padding}; background-color: ${structuralDiv.style.backgroundColor}; border: ${structuralDiv.style.border}; overflow: ${structuralDiv.style.overflow};`;
+             structuralClone.setAttribute('style', structuralStyles);
 
+             // Add elements within this structural div
+             structuralDiv.querySelectorAll('.editable-element').forEach(el => {
+                const clone = el.cloneNode(true);
+                clone.classList.remove('selected', 'editable-element');
+                clone.querySelectorAll('.resize-handle').forEach(h => h.remove());
+                // Ensure contenteditable is false for the exported HTML
+                clone.contentEditable = 'false';
 
-            clone.setAttribute('style', inlineStyles);
-            contentHtml += clone.outerHTML + '\n';
+                // Keep absolute positioning relative to the parent structural div
+                let inlineStyles = `position: absolute; left: ${el.style.left}; top: ${el.style.top}; width: ${el.style.width || el.clientWidth + 'px'}; height: ${el.style.height || el.clientHeight + 'px'};`;
+                const relevantStyles = ['opacity', 'fontFamily', 'fontSize', 'backgroundColor', 'color', 'borderRadius', 'borderWidth', 'borderStyle', 'borderColor', 'boxShadow', 'textShadow', 'padding', 'letterSpacing', 'textTransform', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight']; // Added min/max dimensions
+                relevantStyles.forEach(prop => {
+                    if (el.style[prop]) inlineStyles += ` ${prop.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${el.style[prop]};`;
+                });
+                if (el.tagName === 'BUTTON' && el.style.border) inlineStyles += ` border: ${el.style.border};`; // Ensure border is captured for buttons
+                if (el.tagName === 'IMG' && el.style.src) inlineStyles += ` src: ${el.style.src};`; // Ensure src is captured for images
+                clone.setAttribute('style', inlineStyles);
+                structuralClone.appendChild(clone); // Append element to the structural clone
+             });
+             contentHtml += structuralClone.outerHTML + '\n'; // Add the structural div with its children to the output
         });
+
 
         let bodyFontFamily = getComputedStyle(document.documentElement).getPropertyValue('--font-main').trim();
         let bodyColor = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
-        let bodyStyles = `position: relative; width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow: auto; font-family: ${bodyFontFamily}; color: ${bodyColor};`;
+        // Remove default body styles related to the creator layout
+        let bodyStyles = `position: relative; width: 100%; min-height: 100vh; margin: 0; padding: 0; overflow-x: hidden; font-family: ${bodyFontFamily}; color: ${bodyColor}; box-sizing: border-box;`; // Changed overflow to hidden for x-axis
+
+
         let bodyClasses = [];
-        let extraCss = "/* NeuroWeb Creator Generated Styles - v5 */\n";
+        let extraCss = "/* NeuroWeb Creator Generated Styles - v7 */\n:root{ --bg-dark: #04050a; --accent: #00f8ff; --accent-secondary: #d000ff; --font-mono: 'Roboto Mono', monospace; }\nhtml, body { margin: 0; padding: 0; }\n"; // Added root vars and basic html/body reset
         extraCss += `body { ${bodyStyles} }\n`;
 
-        // Background: Solid Color
+        // Add styles for structural divs in the exported CSS
+        extraCss += `.structural-div { position: absolute; box-sizing: border-box; border: 1px dashed rgba(255, 255, 255, 0.3); overflow: hidden; }\n`;
+        extraCss += `#header-div { top: 0; left: 0; width: 100%; height: 80px; background-color: rgba(0, 0, 0, 0.3); padding: 10px 20px; }\n`;
+        extraCss += `#content-div { top: 80px; left: 0; width: 100%; bottom: 60px; background-color: rgba(0, 0, 0, 0.1); padding: 20px; overflow: auto; }\n`;
+        extraCss += `#footer-div { bottom: 0; left: 0; width: 100%; height: 60px; background-color: rgba(0, 0, 0, 0.3); padding: 10px 20px; display: flex; align-items: center; justify-content: center; }\n`;
+
+
         if (creatorContent.style.backgroundColor && creatorContent.style.backgroundColor !== 'transparent' && !creatorContent.classList.contains('animated-gradient-background') && patternPicker.value === 'none') {
             extraCss += `body { background-color: ${creatorContent.style.backgroundColor} !important; background-image: none !important; }\n`;
         }
 
-        // Background: Animated Patterns (CSS based)
         const activePattern = patternPicker.value;
-        if (activePattern !== 'none' && !activePattern.includes('digital-rain') && !activePattern.includes('warp-speed')) { // CSS patterns
+        // Updated CSS patterns to use new color variables if needed, or keep them self-contained
+        const cssPatterns = {
+            'pattern-animated-grid': `.pattern-animated-grid { background-color: var(--bg-dark); background-image: linear-gradient(rgba(0,248,255,0.12) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(0,248,255,0.12) 1.5px, transparent 1.5px); background-size: 38px 38px; animation: moveGrid 5.5s linear infinite, pulseGridLines 4.5s ease-in-out infinite alternate; } @keyframes moveGrid { 0% { background-position: 0 0; } 100% { background-position: 76px 38px; } } @keyframes pulseGridLines { 0% { opacity: 0.6; filter: brightness(0.9); } 100% { opacity: 1; filter: brightness(1.1); } }\n`,
+            'pattern-animated-dots': `.pattern-animated-dots { background-color: var(--bg-dark); background-image: radial-gradient(rgba(0,248,255,0.25) 1.5px, transparent 1.5px); background-size: 24px 24px; animation: pulseDots 2.8s ease-in-out infinite alternate, shimmerDots 7.5s linear infinite; } @keyframes pulseDots { 0% { background-size: 24px 24px; opacity: 0.35; } 100% { background-size: 28px 28px; opacity: 1; } } @keyframes shimmerDots { 0%, 100% { filter: brightness(0.85) saturate(0.75); } 50% { filter: brightness(1.25) saturate(1.35); } }`,
+            'pattern-animated-lines': `.pattern-animated-lines { background-color: var(--bg-dark); background: repeating-linear-gradient( 55deg, rgba(0,248,255,0.035), rgba(0,248,255,0.035) 12px, rgba(208,0,255,0.055) 12px, rgba(208,0,255,0.055) 24px ); background-size: 220% 220%; animation: moveLines 7.5s linear infinite, lineBrightness 5.5s ease-in-out infinite alternate; } @keyframes moveLines { 0% { background-position: 0% 0%; } 100% { background-position: 220% 220%; } } @keyframes lineBrightness { 0% { opacity: 0.55; } 100% { opacity: 1; } }`,
+            'pattern-hexagonal-mesh': `.pattern-hexagonal-mesh { background-color: var(--bg-dark); --hex-color-main: rgba(0, 248, 255, 0.14); --hex-color-pulse: rgba(208, 0, 255, 0.17); --hex-size: 42px; background-image: linear-gradient(30deg, transparent calc(var(--hex-size)/2), var(--hex-color-main) calc(var(--hex-size)/2), var(--hex-color-main) var(--hex-size), transparent var(--hex-size)), linear-gradient(-30deg, transparent calc(var(--hex-size)/2), var(--hex-color-main) calc(var(--hex-size)/2), var(--hex-color-main) var(--hex-size), transparent var(--hex-size)), linear-gradient(90deg, transparent calc(var(--hex-size)/2), var(--hex-color-main) calc(var(--hex-size)/2), var(--hex-color-main) var(--hex-size), transparent var(--hex-size)); background-size: calc(var(--hex-size) * 1.732) var(--hex-size); animation: moveHexMesh 14s linear infinite, pulseHexOpacity 6.5s ease-in-out infinite alternate; } @keyframes moveHexMesh { 0% { background-position: 0 0; } 100% { background-position: calc(var(--hex-size) * 1.732 * 2) calc(var(--hex-size) * 2); } } @keyframes pulseHexOpacity { 0% { opacity: 0.55; filter: brightness(0.75); } 100% { opacity: 1; filter: brightness(1.15); } }`,
+            'pattern-cosmic-pulse': `.pattern-cosmic-pulse { background-color: #010207; position: relative; overflow: hidden; } .pattern-cosmic-pulse::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle at 20% 30%, rgba(0, 248, 255, 0.35) 0px, transparent 1.1px), radial-gradient(circle at 80% 70%, rgba(208, 0, 255, 0.3) 0px, transparent 1.1px), radial-gradient(circle at 50% 50%, rgba(230, 240, 255, 0.22) 0px, transparent 0.9px), radial-gradient(circle at 30% 80%, rgba(0, 248, 255, 0.22) 0px, transparent 1.3px), radial-gradient(circle at 70% 20%, rgba(208, 0, 255, 0.18) 0px, transparent 0.8px); background-size: 2.2px 2.2px, 2.2px 2.2px, 1.8px 1.8px, 2.6px 2.6px, 1.6px 1.6px; background-position: 0 0, 100px 150px, 200px 50px, 50px 250px, 250px 200px; animation: cosmicPulseStars 9s linear infinite, cosmicPulseOpacity 5.5s ease-in-out infinite alternate; } @keyframes cosmicPulseStars { 0% { background-position: 0 0, 100px 150px, 200px 50px, 50px 250px, 250px 200px; } 100% { background-position: -220px -160px, -110px 0px, 0px 260px, 260px 50px, 50px 410px; } } @keyframes cosmicPulseOpacity { 0% { opacity: 0.45; filter: brightness(0.65) saturate(0.55); } 50% { opacity: 1; filter: brightness(1.35) saturate(1.35); } 100% { opacity: 0.45; filter: brightness(0.65) saturate(0.55); } }`,
+            'pattern-techno-circuit': `.pattern-techno-circuit { background-color: #03050a; background-image: linear-gradient(rgba(0,248,255,0.08) 1.1px, transparent 1.1px), linear-gradient(90deg, rgba(0,248,255,0.08) 1.1px, transparent 1.1px), linear-gradient(45deg, rgba(208,0,255,0.06) 1.1px, transparent 1.1px), linear-gradient(-45deg, rgba(208,0,255,0.06) 1.1px, transparent 1.1px); background-size: 42px 42px, 42px 42px, 64px 64px, 64px 64px; animation: moveCircuitGrid 11s linear infinite, pulseCircuitGlow 3.8s ease-in-out infinite alternate; } @keyframes moveCircuitGrid { 0% { background-position: 0 0, 0 0, 0 0, 0 0; } 100% { background-position: 84px 42px, 42px 84px, 128px 128px, -128px -128px; } } @keyframes pulseCircuitGlow { 0% { filter: brightness(0.75) saturate(0.65); } 100% { filter: brightness(1.25) saturate(1.15); } }`,
+            'pattern-aurora-borealis': `.pattern-aurora-borealis { background: linear-gradient( -50deg, rgba(4, 8, 22, 0.92), rgba(0, 248, 255, 0.32), rgba(208, 0, 255, 0.38), rgba(0, 110, 160, 0.28), rgba(4, 8, 22, 0.92) ); background-size: 450% 450%; animation: auroraFlow 18s ease infinite; } @keyframes auroraFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }`
+        };
+
+        if (cssPatterns[activePattern]) {
             bodyClasses.push(activePattern);
-            // Include CSS keyframes for downloaded file
-            if (activePattern === 'pattern-animated-grid') extraCss += `.pattern-animated-grid { background-image: linear-gradient(rgba(0,234,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,234,255,0.07) 1px, transparent 1px); background-size: 25px 25px; animation: moveGrid 8s linear infinite; } @keyframes moveGrid { 0% { background-position: 0 0; } 100% { background-position: 25px 25px; } }\n`;
-            if (activePattern === 'pattern-animated-dots') extraCss += `.pattern-animated-dots { background-image: radial-gradient(rgba(0,234,255,0.15) 1px, transparent 1px); background-size: 18px 18px; animation: pulseDots 4s ease-in-out infinite alternate; } @keyframes pulseDots { 0% { background-size: 18px 18px; opacity: 0.6; } 100% { background-size: 22px 22px; opacity: 1; } }\n`;
-            if (activePattern === 'pattern-animated-lines') extraCss += `.pattern-animated-lines { background: repeating-linear-gradient( 60deg, rgba(0,234,255,0.03), rgba(0,234,255,0.03) 8px, rgba(0,234,255,0.06) 8px, rgba(0,234,255,0.06) 16px ); background-size: 150% 150%; animation: moveLines 10s linear infinite; } @keyframes moveLines { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }\n`;
-            if (activePattern === 'pattern-hexagonal-mesh') extraCss += `.pattern-hexagonal-mesh { --hex-color: rgba(0, 234, 255, 0.08); --hex-size: 30px; background-image: linear-gradient(30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)), linear-gradient(-30deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)), linear-gradient(90deg, transparent calc(var(--hex-size)/2), var(--hex-color) calc(var(--hex-size)/2), var(--hex-color) var(--hex-size), transparent var(--hex-size)); background-size: calc(var(--hex-size) * 1.732) var(--hex-size); animation: moveHexMesh 20s linear infinite; } @keyframes moveHexMesh { 0% { background-position: 0 0; } 100% { background-position: calc(var(--hex-size) * 1.732 * 2) calc(var(--hex-size) * 2); } }\n`;
+            extraCss += cssPatterns[activePattern];
         }
 
-        // Background: Gradient
+
         const gradColor1Val = creatorContent.style.getPropertyValue('--gradient-color-1') || gradientColor1.value;
         const gradColor2Val = creatorContent.style.getPropertyValue('--gradient-color-2') || gradientColor2.value;
         const gradDirectionVal = creatorContent.style.getPropertyValue('--gradient-direction') || gradientDirection.value;
 
         if (creatorContent.classList.contains('animated-gradient-background')) {
             bodyClasses.push('animated-gradient-background');
-            extraCss += `.animated-gradient-background { background-size: 200% 200% !important; animation: gradientAnimation 10s ease infinite alternate; background-image: linear-gradient(${gradDirectionVal}, ${gradColor1Val}, ${gradColor2Val}) !important; }\n @keyframes gradientAnimation {0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }\n`;
-        } else if (creatorContent.style.background.includes('linear-gradient')) {
+            extraCss += `.animated-gradient-background { background-size: 280% 280% !important; animation: gradientAnimation 11s ease infinite alternate; background-image: linear-gradient(${gradDirectionVal}, ${gradColor1Val}, ${gradColor2Val}) !important; }\n @keyframes gradientAnimation {0% { background-position: 0% 50%; filter: saturate(1.1) brightness(1.05); } 100% { background-position: 100% 50%; filter: saturate(1.3) brightness(1.15); } }\n`;
+        } else if (creatorContent.style.backgroundImage.includes('linear-gradient')) {
              extraCss += `body { background-image: linear-gradient(${gradDirectionVal}, ${gradColor1Val}, ${gradColor2Val}) !important; background-color: transparent !important; }\n`;
         }
 
-        // Default body background if nothing specific is set
-        if (!creatorContent.style.backgroundColor && activePattern === 'none' && !creatorContent.style.background.includes('linear-gradient')) {
+
+        if (!creatorContent.style.backgroundColor && activePattern === 'none' && !creatorContent.style.backgroundImage.includes('linear-gradient')) {
              extraCss += `body { background-color: ${getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim()}; }\n`
         }
 
-        // Script for Canvas Backgrounds if selected
         let canvasScript = '';
         if (activePattern === 'pattern-digital-rain' || activePattern === 'pattern-warp-speed') {
             canvasScript = `<script>\n`;
-            canvasScript += `const dynamicBgCanvas = document.createElement('canvas');\n`;
-            canvasScript += `dynamicBgCanvas.id = 'downloadedDynamicBgCanvas';\n`;
-            canvasScript += `dynamicBgCanvas.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;';\n`; // Use cssText for multiple styles
-            canvasScript += `document.body.insertBefore(dynamicBgCanvas, document.body.firstChild);\n`;
-            canvasScript += `const ctx = dynamicBgCanvas.getContext('2d');\n`;
+            canvasScript += `const dynamicBgCanvas_dl = document.createElement('canvas');\n`;
+            canvasScript += `dynamicBgCanvas_dl.id = 'downloadedDynamicBgCanvas';\n`;
+            canvasScript += `dynamicBgCanvas_dl.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;';\n`;
+            canvasScript += `document.body.insertBefore(dynamicBgCanvas_dl, document.body.firstChild);\n`;
+            canvasScript += `const ctx_dl = dynamicBgCanvas_dl.getContext('2d');\n`;
             canvasScript += `let dynamicBgAnimationId_dl = null;\n`;
+            // Get CSS variable values for script
+            const accentColorForScript = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            const accentSecondaryColorForScript = getComputedStyle(document.documentElement).getPropertyValue('--accent-secondary').trim();
+            const fontMonoForScript = getComputedStyle(document.documentElement).getPropertyValue('--font-mono').trim();
+
 
             if (activePattern === 'pattern-digital-rain') {
-                extraCss += `body { background-color: #03070f !important; overflow: hidden !important; }\n`; // Ensure body bg for rain
+                extraCss += `body { background-color: #010205 !important; overflow: hidden !important; }\n`; // Match canvas bg
                 canvasScript += `let rainDrops_dl = [];\n`;
                 canvasScript += `function digitalRainEffect_dl() {
-                                    const W = dynamicBgCanvas.width = window.innerWidth; const H = dynamicBgCanvas.height = window.innerHeight;
-                                    const fontSize = 14; const columns = Math.floor(W / fontSize);
-                                    if (rainDrops_dl.length === 0) { for (let i = 0; i < columns; i++) rainDrops_dl[i] = 1; }
-                                    ctx.fillStyle = "rgba(3, 7, 15, 0.1)"; ctx.fillRect(0, 0, W, H);
-                                    ctx.fillStyle = "${getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()}";
-                                    ctx.font = \`\${fontSize}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-mono').trim()}\`;
+                                    const W = dynamicBgCanvas_dl.width = window.innerWidth; const H = dynamicBgCanvas_dl.height = window.innerHeight;
+                                    const fontSize = 16; const columns = Math.floor(W / fontSize);
+                                    if (rainDrops_dl.length !== columns) { rainDrops_dl = []; for (let i = 0; i < columns; i++) rainDrops_dl[i] = 1; }
+                                    ctx_dl.fillStyle = "rgba(1, 2, 5, 0.07)"; ctx_dl.fillRect(0, 0, W, H);
+                                    ctx_dl.fillStyle = "${accentColorForScript}";
+                                    ctx_dl.font = \`\${fontSize}px ${fontMonoForScript}\`;
                                     for (let i = 0; i < rainDrops_dl.length; i++) {
-                                        const text = String.fromCharCode(Math.random() * 128); ctx.fillText(text, i * fontSize, rainDrops_dl[i] * fontSize);
-                                        if (rainDrops_dl[i] * fontSize > H && Math.random() > 0.975) rainDrops_dl[i] = 0;
+                                        const text = String.fromCharCode(Math.random() * 128); ctx_dl.fillText(text, i * fontSize, rainDrops_dl[i] * fontSize);
+                                        if (rainDrops_dl[i] * fontSize > H && Math.random() > 0.985) rainDrops_dl[i] = 0;
                                         rainDrops_dl[i]++;
                                     }
                                     dynamicBgAnimationId_dl = requestAnimationFrame(digitalRainEffect_dl);
                                  }\n digitalRainEffect_dl();\n`;
             } else if (activePattern === 'pattern-warp-speed') {
-                extraCss += `body { background-color: #03050a !important; overflow: hidden !important; }\n`; // Ensure body bg for warp
+                extraCss += `body { background-color: #000103 !important; overflow: hidden !important; }\n`; // Match canvas bg
                 canvasScript += `let stars_dl = [];\n`;
                 canvasScript += `function warpSpeedEffect_dl() {
-                                    const W = dynamicBgCanvas.width = window.innerWidth; const H = dynamicBgCanvas.height = window.innerHeight;
-                                    const numStars = 300; const speed = 5;
-                                    if (stars_dl.length === 0) { for (let i = 0; i < numStars; i++) stars_dl[i] = { x: Math.random()*W-W/2, y: Math.random()*H-H/2, z: Math.random()*W, pz: Math.random()*W };}
-                                    ctx.fillStyle = "rgba(3, 5, 10, 0.2)"; ctx.fillRect(0, 0, W, H); ctx.save(); ctx.translate(W/2, H/2);
+                                    const W = dynamicBgCanvas_dl.width = window.innerWidth; const H = dynamicBgCanvas_dl.height = window.innerHeight;
+                                    const numStars = 400; const speed = 7;
+                                    if (stars_dl.length !== numStars || (stars_dl.length > 0 && stars_dl[0].W_orig !== W)) { stars_dl = []; for (let i = 0; i < numStars; i++) stars_dl[i] = { x: Math.random()*W-W/2, y: Math.random()*H-H/2, z: Math.random()*W, pz: Math.random()*W, W_orig: W };}
+                                    ctx_dl.fillStyle = "rgba(0, 1, 3, 0.22)"; ctx_dl.fillRect(0, 0, W, H); ctx_dl.save(); ctx_dl.translate(W/2, H/2);
                                     for (let i = 0; i < stars_dl.length; i++) {
                                         const star = stars_dl[i]; star.z -= speed;
                                         if (star.z < 1) { star.z = W; star.x = Math.random()*W-W/2; star.y = Math.random()*H-H/2; star.pz = star.z; }
-                                        const sx = star.x/star.z*W; const sy = star.y/star.z*H; const r = Math.max(0.1, (1-star.z/W)*2.5);
-                                        ctx.beginPath(); ctx.arc(sx, sy, r, 0, Math.PI*2); ctx.fillStyle = \`rgba(0, 234, 255, \${1-star.z/W*0.8})\`; ctx.fill();
+                                        const sx = star.x/star.z*W; const sy = star.y/star.z*H; const r = Math.max(0.1, (1-star.z/W)*3);
+                                        ctx_dl.fillStyle = \`rgba(0, 248, 255, \${1-star.z/W*0.65})\`; ctx_dl.fill(); // Using actual color value from accent
                                         const prev_sx = star.x/star.pz*W; const prev_sy = star.y/star.pz*H;
-                                        ctx.beginPath(); ctx.moveTo(prev_sx, prev_sy); ctx.lineTo(sx, sy);
-                                        ctx.strokeStyle = \`rgba(170, 0, 255, \${0.5*(1-star.z/W)})\`; ctx.lineWidth = r*1.5; ctx.stroke(); star.pz = star.z;
-                                    } ctx.restore(); dynamicBgAnimationId_dl = requestAnimationFrame(warpSpeedEffect_dl);
+                                        ctx_dl.beginPath(); ctx_dl.moveTo(prev_sx, prev_sy); ctx_dl.lineTo(sx, sy);
+                                        ctx_dl.strokeStyle = \`rgba(208, 0, 255, \${0.65*(1-star.z/W)})\`; ctx_dl.lineWidth = r*1.7; ctx_dl.stroke(); // Using actual color value from accent-secondary
+                                        star.pz = star.z;
+                                    } ctx_dl.restore(); dynamicBgAnimationId_dl = requestAnimationFrame(warpSpeedEffect_dl);
                                  }\n warpSpeedEffect_dl();\n`;
             }
-            canvasScript += `window.addEventListener('resize', () => { dynamicBgCanvas.width = window.innerWidth; dynamicBgCanvas.height = window.innerHeight; if ('${activePattern}' === 'pattern-digital-rain') rainDrops_dl = []; if ('${activePattern}' === 'pattern-warp-speed') stars_dl = []; });\n`; // Resize handler
-            canvasScript += `<\/script>\n`; // Escaped closing script tag
+            canvasScript += `window.addEventListener('resize', () => { dynamicBgCanvas_dl.width = window.innerWidth; dynamicBgCanvas_dl.height = window.innerHeight; if ('${activePattern}' === 'pattern-digital-rain') { rainDrops_dl = []; digitalRainEffect_dl(); } if ('${activePattern}' === 'pattern-warp-speed') { stars_dl = []; warpSpeedEffect_dl(); } });\n`;
+            canvasScript += `<\/script>\n`;
         }
 
-        // Include Google Fonts links in the downloaded HTML
         let fontLinks = `
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1045,10 +1696,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 `;
-
-
-        const fullHtml = `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>NeuroWeb Creator - Композиция</title>\n${fontLinks}<style>\n${extraCss}\n</style>\n</head>\n<body class="${bodyClasses.join(' ')}">\n${contentHtml}\n${canvasScript}</body>\n</html>`;
-        downloadFile(fullHtml, 'neuroweb_composition_v5.html', 'text/html');
+        const fullHtml = `<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>NeuroWeb Creator - Композиция v7</title>\n${fontLinks}<style>\n${extraCss}\n</style>\n</head>\n<body class="${bodyClasses.join(' ')}">\n${contentHtml}\n${canvasScript}</body>\n</html>`;
+        downloadFile(fullHtml, 'neuroweb_composition_v7.html', 'text/html');
         showCustomAlert("Композиция успешно сохранена!", "success");
     };
 
@@ -1060,11 +1709,10 @@
       document.body.removeChild(a); URL.revokeObjectURL(a.href);
     }
 
-    function showCustomAlert(message, type = 'info') { // success, error, info
+    function showCustomAlert(message, type = 'info') {
         let alertBox = document.getElementById('customAlertBox');
         if (!alertBox) {
             alertBox = document.createElement('div'); alertBox.id = 'customAlertBox';
-            alertBox.style.cssText = `position: fixed; top: -120px; left: 50%; transform: translateX(-50%); padding: 18px 30px; background-color: var(--surface); color: var(--text); border: 1.5px solid var(--accent); border-radius: 8px; box-shadow: 0 6px 25px rgba(0,0,0,0.6); z-index: 2000; font-family: var(--font-main); font-size: 1rem; letter-spacing: 0.8px; opacity: 0; transition: opacity 0.45s ease, top 0.45s cubic-bezier(0.68, -0.6, 0.27, 1.55); text-align: center; min-width: 320px;`;
             document.body.appendChild(alertBox);
         }
         alertBox.textContent = message;
@@ -1074,51 +1722,317 @@
 
         if (type === 'error') {
             borderColor = getComputedStyle(document.documentElement).getPropertyValue('--danger-color').trim();
-            textColor = borderColor;
-            glowColor = borderColor;
+            textColor = borderColor; glowColor = borderColor; // Use danger color for glow too
         } else if (type === 'success') {
             borderColor = getComputedStyle(document.documentElement).getPropertyValue('--success-color').trim();
-            textColor = borderColor;
-            glowColor = borderColor;
+            textColor = borderColor; glowColor = borderColor; // Use success color for glow
         }
-        alertBox.style.borderColor = borderColor;
-        alertBox.style.color = textColor;
-        alertBox.style.boxShadow = `0 0 12px ${glowColor}, 0 6px 25px rgba(0,0,0,0.6)`;
+        alertBox.style.borderColor = borderColor; alertBox.style.color = textColor;
+        alertBox.style.boxShadow = `0 0 18px ${glowColor}, 0 0 8px ${glowColor} inset, 0 10px 35px rgba(0,0,0,0.75)`; // Enhanced glow
 
-        setTimeout(() => { alertBox.style.top = '35px'; alertBox.style.opacity = '1'; }, 50);
-        setTimeout(() => { alertBox.style.opacity = '0'; alertBox.style.top = '-120px';}, 3800);
+        setTimeout(() => { alertBox.style.top = '45px'; alertBox.style.opacity = '1'; }, 50); // Adjusted top position
+        setTimeout(() => { alertBox.style.opacity = '0'; alertBox.style.top = '-200px';}, 4500); // Longer display
     }
-    // Ensure all buttons with text have span wrappers for the ::before pseudo-element fix
+
+    // Ensure all buttons have spans for the ::before pseudo-element to work correctly with text
     document.querySelectorAll('.btn').forEach(btn => {
         if (!btn.querySelector('span') && btn.textContent.trim() !== '') {
             btn.innerHTML = `<span>${btn.innerHTML}</span>`;
         }
     });
 
-    // Add resize event listener for canvas backgrounds
     window.addEventListener('resize', () => {
-        if (patternPicker.value === 'pattern-digital-rain' || patternPicker.value === 'pattern-warp-speed') {
-             // Update canvas dimensions and re-render
-            dynamicBgCanvas.width = creatorContent.clientWidth;
-            dynamicBgCanvas.height = creatorContent.clientHeight;
-            // Re-initialize data for canvas effects on resize
-            if (patternPicker.value === 'pattern-digital-rain') rainDrops = [];
-            if (patternPicker.value === 'pattern-warp-speed') stars = [];
-            // The animation loop will handle the redraw
+        if (creatorView.classList.contains('active')) {
+            const currentPattern = patternPicker.value;
+            if (currentPattern === 'pattern-digital-rain' || currentPattern === 'pattern-warp-speed') {
+                if (dynamicBgCanvas && creatorContent) {
+                    stopDynamicBgAnimation();
+                    dynamicBgCanvas.width = creatorContent.clientWidth;
+                    dynamicBgCanvas.height = creatorContent.clientHeight;
+                    if (currentPattern === 'pattern-digital-rain') {
+                        digitalRainEffect();
+                    } else if (currentPattern === 'pattern-warp-speed') {
+                        warpSpeedEffect();
+                    }
+                }
+            }
         }
     });
 
-    // Initial canvas size setup on load
     window.onload = function() {
-        if (dynamicBgCanvas && creatorContent) {
-             dynamicBgCanvas.width = creatorContent.clientWidth;
-             dynamicBgCanvas.height = creatorContent.clientHeight;
-             // If a canvas pattern is selected by default, start its animation
-             if (patternPicker.value === 'pattern-digital-rain') digitalRainEffect();
-             if (patternPicker.value === 'pattern-warp-speed') warpSpeedEffect();
+        if (creatorContent) {
+            if (dynamicBgCanvas) {
+                 dynamicBgCanvas.width = creatorContent.clientWidth;
+                 dynamicBgCanvas.height = creatorContent.clientHeight;
+                 dynamicBgCanvas.style.display = 'none';
+            }
+
+             clearCreatorBackgroundStyles();
+
+             const initialPattern = patternPicker.value;
+
+             if (initialPattern === 'pattern-digital-rain') {
+                 if (dynamicBgCanvas) digitalRainEffect();
+             } else if (initialPattern === 'pattern-warp-speed') {
+                 if (dynamicBgCanvas) warpSpeedEffect();
+             } else if (initialPattern !== 'none') {
+                 creatorContent.classList.add(initialPattern);
+                 solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+             } else {
+                 creatorContent.style.backgroundColor = solidColorPicker.value;
+             }
         }
-         createParticles(); // Also create particles on load
+         createParticles();
+         clearPropertyInputs(); // Initialize property inputs to default/cleared state
     };
+
+    // --- Random Template Generation Logic ---
+
+    // Helper to get a random element from an array
+    function getRandomElement(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    // Helper to generate a random hex color
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+     // Helper to generate a random RGBA color with some transparency
+     function getRandomRGBAColor(minAlpha = 0.1, maxAlpha = 0.9) {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        const a = (Math.random() * (maxAlpha - minAlpha) + minAlpha).toFixed(2);
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+     }
+
+
+    // Generate a random box shadow
+    function generateRandomBoxShadow() {
+        const offsetX = Math.floor(Math.random() * 20 - 10); // -10 to 10
+        const offsetY = Math.floor(Math.random() * 20 - 10); // -10 to 10
+        const blur = Math.floor(Math.random() * 30); // 0 to 30
+        const spread = Math.floor(Math.random() * 10); // 0 to 10
+        const color = getRandomRGBAColor(0.1, 0.6); // Semi-transparent shadow
+        const inset = Math.random() > 0.8 ? 'inset' : ''; // 20% chance of inset
+        return `${inset} ${offsetX}px ${offsetY}px ${blur}px ${spread}px ${color}`.trim();
+    }
+
+     // Generate a random text shadow
+     function generateRandomTextShadow() {
+        const offsetX = Math.floor(Math.random() * 10 - 5); // -5 to 5
+        const offsetY = Math.floor(Math.random() * 10 - 5); // -5 to 5
+        const blur = Math.floor(Math.random() * 15); // 0 to 15
+        const color = getRandomRGBAColor(0.3, 0.9); // Semi-transparent shadow
+        return `${offsetX}px ${offsetY}px ${blur}px ${color}`;
+     }
+
+
+    // Generate a random template
+    function generateRandomTemplate() {
+        // Clear existing elements (including previous structural divs)
+        creatorContent.querySelectorAll('.structural-div, .editable-element').forEach(el => el.remove());
+        deselectAllElements();
+
+        // Randomly select background style
+        const backgroundType = getRandomElement(['solid', 'pattern', 'gradient']);
+
+        clearCreatorBackgroundStyles(); // Clear previous background styles
+
+        if (backgroundType === 'solid') {
+            const randomColor = getRandomColor();
+            creatorContent.style.backgroundColor = randomColor;
+            solidColorPicker.value = randomColor;
+            patternPicker.value = 'none';
+            gradientAnimate.checked = false;
+        } else if (backgroundType === 'pattern') {
+            const patterns = Array.from(patternPicker.options).map(opt => opt.value).filter(val => val !== 'none');
+            const randomPattern = getRandomElement(patterns);
+            patternPicker.value = randomPattern;
+             if (randomPattern === 'pattern-digital-rain') {
+                digitalRainEffect();
+             } else if (randomPattern === 'pattern-warp-speed') {
+                warpSpeedEffect();
+             } else {
+                creatorContent.classList.add(randomPattern);
+             }
+             solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+             gradientAnimate.checked = false;
+        } else if (backgroundType === 'gradient') {
+            const randomColor1 = getRandomColor();
+            const randomColor2 = getRandomColor();
+            const randomDirection = getRandomElement(Array.from(gradientDirection.options).map(opt => opt.value));
+            const animateGradient = Math.random() > 0.5; // 50% chance to animate
+
+            gradientColor1.value = randomColor1;
+            gradientColor2.value = randomColor2;
+            gradientDirection.value = randomDirection;
+            gradientAnimate.checked = animateGradient;
+
+             creatorContent.style.setProperty('--gradient-color-1', randomColor1);
+             creatorContent.style.setProperty('--gradient-color-2', randomColor2);
+             creatorContent.style.setProperty('--gradient-direction', randomDirection);
+
+            if (animateGradient) {
+                creatorContent.classList.add('animated-gradient-background');
+            } else {
+                 creatorContent.style.backgroundImage = `linear-gradient(${randomDirection}, ${randomColor1}, ${randomColor2})`;
+                 creatorContent.style.backgroundColor = 'transparent';
+            }
+            patternPicker.value = 'none';
+            solidColorPicker.value = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark').trim();
+        }
+
+        // --- Create Structural Divs ---
+        const headerDiv = document.createElement('div');
+        headerDiv.id = 'header-div';
+        headerDiv.classList.add('structural-div');
+        creatorContent.appendChild(headerDiv);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.id = 'content-div';
+        contentDiv.classList.add('structural-div');
+        creatorContent.appendChild(contentDiv);
+
+        const footerDiv = document.createElement('div');
+        footerDiv.id = 'footer-div';
+        footerDiv.classList.add('structural-div');
+        creatorContent.appendChild(footerDiv);
+
+        // --- Populate Structural Divs ---
+        const elementTypes = ['Text', 'Button', 'Div', 'Image'];
+        const sampleTexts = [
+            "Заголовок сайта", "Логотип", "Навигация", "Приветствие", "О нас", "Услуги",
+            "Портфолио", "Контакты", "Подвал сайта", "Копирайт", "Быстрые ссылки"
+        ];
+         const sampleImageUrls = [
+             "https://placehold.co/100x50/abcdef/000?text=Лого",
+             "https://placehold.co/200x150/123456/fff?text=Изображение",
+             "https://placehold.co/150x150/ff00ff/000?text=Объект",
+             "https://placehold.co/300x100/00ffff/04050a?text=Баннер"
+         ];
+         const fontFamilies = Array.from(elementFontFamilyInput.options).map(opt => opt.value);
+         const borderStyles = Array.from(elementBorderStyleInput.options).map(opt => opt.value);
+
+
+        // Add elements to Header
+        const numHeaderElements = Math.floor(Math.random() * 3) + 1; // 1 to 3 elements in header
+        for(let i = 0; i < numHeaderElements; i++) {
+             const randomElementType = getRandomElement(['Text', 'Button']); // Header usually has text/buttons
+             let textContent = (randomElementType === 'Text') ? getRandomElement(["Логотип", "Название сайта", "Меню"]) : getRandomElement(["Главная", "О нас", "Контакты"]);
+             const styles = {
+                 opacity: (Math.random() * 0.3 + 0.7).toFixed(2), // Higher opacity
+                 fontFamily: getRandomElement(fontFamilies),
+                 fontSize: `${Math.floor(Math.random() * 15) + 14}px`, // 14 to 29px
+                 color: getRandomColor(),
+                 backgroundColor: getRandomRGBAColor(0.0, 0.2), // Very transparent
+                 borderStyle: 'none', // No border by default
+                 borderRadius: '0px', // No border radius by default
+                 boxShadow: Math.random() > 0.7 ? generateRandomBoxShadow() : 'none', // Small chance of shadow
+                 textShadow: Math.random() > 0.6 && randomElementType === 'Text' ? generateRandomTextShadow() : 'none' // Small chance of text shadow
+             };
+             if (randomElementType === 'Button') {
+                 styles.borderStyle = getRandomElement(['none', 'solid', 'dashed']);
+                 if (styles.borderStyle !== 'none') {
+                     styles.borderWidth = `${Math.floor(Math.random() * 3) + 1}px`;
+                     styles.borderColor = getRandomColor();
+                 }
+                 styles.borderRadius = `${Math.floor(Math.random() * 10)}px`;
+                 styles.backgroundColor = getRandomRGBAColor(0.1, 0.5);
+             }
+             addElementToCreator(randomElementType, textContent, styles, headerDiv);
+        }
+
+
+        // Add elements to Content
+        const numContentElements = Math.floor(Math.random() * 10) + 5; // 5 to 14 elements in content
+        for(let i = 0; i < numContentElements; i++) {
+            const randomElementType = getRandomElement(elementTypes);
+            let textContent = '';
+            let styles = {};
+
+             if (randomElementType !== 'Image') {
+                 textContent = getRandomElement(sampleTexts);
+                 styles.fontSize = `${Math.floor(Math.random() * 25) + 16}px`; // 16 to 41px
+                 styles.color = getRandomColor();
+                 styles.backgroundColor = getRandomRGBAColor(0.05, 0.4);
+                 styles.textShadow = Math.random() > 0.4 && randomElementType === 'Text' ? generateRandomTextShadow() : 'none';
+             } else {
+                 styles.src = getRandomElement(sampleImageUrls);
+                 textContent = 'Изображение';
+                 styles.borderStyle = getRandomElement(['none', 'solid']);
+                  if (styles.borderStyle !== 'none') {
+                     styles.borderWidth = `${Math.floor(Math.random() * 4) + 1}px`;
+                     styles.borderColor = getRandomColor();
+                  }
+                  styles.borderRadius = `${Math.floor(Math.random() * 20)}px`;
+             }
+
+             styles.opacity = (Math.random() * 0.4 + 0.6).toFixed(2); // 0.6 to 1.0 opacity
+             styles.fontFamily = getRandomElement(fontFamilies);
+
+            // Border (for all types except maybe some text)
+             if (randomElementType !== 'Text' || Math.random() > 0.5) { // Text elements have border less often
+                 styles.borderStyle = getRandomElement(borderStyles);
+                  if (styles.borderStyle !== 'none') {
+                     styles.borderWidth = `${Math.floor(Math.random() * 5) + 1}px`; // 1 to 5px
+                     styles.borderColor = getRandomColor();
+                  }
+                  styles.borderRadius = `${Math.floor(Math.random() * 25)}px`; // 0 to 25px
+             } else {
+                 styles.borderStyle = 'none';
+                 styles.borderRadius = `${Math.floor(Math.random() * 50)}px`; // 0 to 50px even if no border
+             }
+
+
+            // Box Shadow
+            if (Math.random() > 0.5) { // 50% chance of box shadow
+                 styles.boxShadow = generateRandomBoxShadow();
+            }
+
+
+            addElementToCreator(randomElementType, textContent, styles, contentDiv);
+        }
+
+        // Add elements to Footer
+        const numFooterElements = Math.floor(Math.random() * 3) + 1; // 1 to 3 elements in footer
+        for(let i = 0; i < numFooterElements; i++) {
+             const randomElementType = getRandomElement(['Text', 'Button']); // Footer usually has text/buttons
+             let textContent = (randomElementType === 'Text') ? getRandomElement(["Копирайт © 2023", "Политика конфиденциальности", "Условия использования"]) : getRandomElement(["Вверх", "Поделиться"]);
+             const styles = {
+                 opacity: (Math.random() * 0.4 + 0.6).toFixed(2), // Higher opacity
+                 fontFamily: getRandomElement(fontFamilies),
+                 fontSize: `${Math.floor(Math.random() * 8) + 12}px`, // 12 to 20px
+                 color: getRandomColor(),
+                 backgroundColor: getRandomRGBAColor(0.0, 0.2), // Very transparent
+                 borderStyle: 'none', // No border by default
+                 borderRadius: '0px', // No border radius by default
+                 boxShadow: 'none', // No shadow by default
+                 textShadow: Math.random() > 0.5 && randomElementType === 'Text' ? generateRandomTextShadow() : 'none' // Small chance of text shadow
+             };
+              if (randomElementType === 'Button') {
+                 styles.borderStyle = getRandomElement(['none', 'solid']);
+                 if (styles.borderStyle !== 'none') {
+                     styles.borderWidth = `${Math.floor(Math.random() * 2) + 1}px`;
+                     styles.borderColor = getRandomColor();
+                 }
+                 styles.borderRadius = `${Math.floor(Math.random() * 8)}px`;
+                 styles.backgroundColor = getRandomRGBAColor(0.1, 0.4);
+             }
+             addElementToCreator(randomElementType, textContent, styles, footerDiv);
+        }
+
+
+        showCustomAlert("Случайный шаблон сгенерирован!", "info");
+    }
+
+    generateRandomBtn.onclick = generateRandomTemplate; // Attach the function to the button
 
   </script>
 </body>
